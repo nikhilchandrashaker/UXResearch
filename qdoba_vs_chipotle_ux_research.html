@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qdoba vs Chipotle — UX Research 2024</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-tertiary: #eeede8;
+    --text-primary: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.24);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --chip: #3c6e14;
+    --chip-mid: #639922;
+    --chip-light: #eaf3de;
+    --qdob: #c0420a;
+    --qdob-mid: #d85a30;
+    --qdob-light: #faece7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c; --bg-secondary: #2a2a28; --bg-tertiary: #333331;
+      --text-primary: #f0efea; --text-secondary: #b4b2a9; --text-tertiary: #888780;
+      --border: rgba(255,255,255,0.12); --border-strong: rgba(255,255,255,0.24);
+      --chip-light: #173404; --qdob-light: #4a1b0c;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg-tertiary); color: var(--text-primary); min-height: 100vh; padding: 2rem 1rem; }
+  .container { max-width: 880px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border); padding: 2rem 2.5rem 3rem; }
+
+  /* Header */
+  .header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--border); }
+  .dash-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .dash-sub { font-size: 14px; color: var(--text-secondary); }
+  .brand-pills { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .brand-pill { font-size: 13px; font-weight: 700; padding: 6px 18px; border-radius: 999px; letter-spacing: .01em; }
+  .pill-chip { background: var(--chip-light); color: var(--chip); }
+  .pill-qdob { background: var(--qdob-light); color: var(--qdob); }
+
+  /* Section label */
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); margin: 2rem 0 .75rem; }
+
+  /* Metrics */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .metric-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: .9rem 1rem; }
+  .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .metric-val { font-size: 22px; font-weight: 700; }
+  .metric-note { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+  /* H2H */
+  .h2h-header { display: grid; grid-template-columns: 1fr 120px 1fr; margin-bottom: 6px; }
+  .h2h-brand { font-size: 14px; font-weight: 700; }
+  .h2h-brand.left { color: var(--chip); }
+  .h2h-brand.right { color: var(--qdob); text-align: right; }
+  .h2h-grid { display: grid; gap: 12px; }
+  .h2h-row { display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 8px; }
+  .h2h-dim { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--text-tertiary); text-align: center; line-height: 1.3; }
+  .h2h-side { display: flex; align-items: center; gap: 8px; }
+  .h2h-side.left { flex-direction: row-reverse; }
+  .h2h-score { font-size: 15px; font-weight: 700; min-width: 28px; }
+  .h2h-score.left { color: var(--chip); text-align: left; }
+  .h2h-score.right { color: var(--qdob); text-align: right; }
+  .h2h-track { flex: 1; height: 16px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+  .h2h-fill { height: 100%; border-radius: 4px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+  /* Charts */
+  .chart-wrap { position: relative; width: 100%; height: 320px; margin-top: .5rem; }
+  .legend-row { display: flex; gap: 20px; margin-bottom: 10px; font-size: 13px; color: var(--text-secondary); flex-wrap: wrap; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+
+  /* Tabs */
+  .tab-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tab-btn { font-size: 13px; padding: 6px 14px; border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--bg); color: var(--text-secondary); cursor: pointer; transition: all .15s; }
+  .tab-btn:hover { background: var(--bg-secondary); }
+  .tab-btn.active { background: var(--bg-secondary); color: var(--text-primary); font-weight: 600; }
+
+  /* Segment stacked bars */
+  .seg-item { margin-bottom: 12px; }
+  .seg-label-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+  .seg-track { height: 24px; border-radius: 4px; overflow: hidden; display: flex; }
+  .seg-fill-chip { height: 100%; background: var(--chip-mid); transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .seg-fill-qdob { height: 100%; background: var(--qdob-mid); transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .seg-legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+  /* Menu spotlight */
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .menu-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; }
+  .menu-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  .menu-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .menu-row:last-child { border-bottom: none; }
+  .menu-item-name { color: var(--text-secondary); }
+  .menu-score { font-weight: 700; }
+  .win-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .win-chip { background: var(--chip-light); color: var(--chip); }
+  .win-qdob { background: var(--qdob-light); color: var(--qdob); }
+
+  /* Verdict */
+  .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .verdict-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+  .verdict-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 8px; }
+  .verdict-text { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* Pricing */
+  .pricing-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .price-card { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; }
+  .price-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .price-stat { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 0.5px solid var(--border); }
+  .price-stat:last-child { border-bottom: none; }
+  .price-label { color: var(--text-secondary); }
+
+  .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--text-tertiary); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  @media (max-width: 580px) {
+    .container { padding: 1.25rem 1.25rem 2rem; }
+    .menu-grid, .verdict-grid, .pricing-row { grid-template-columns: 1fr; }
+    .h2h-row { grid-template-columns: 1fr 80px 1fr; }
+    .h2h-dim { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div>
+      <p class="dash-title">Qdoba vs Chipotle — UX Research</p>
+      <p class="dash-sub">n = 1,540 respondents &middot; Ages 18–50 &middot; Fast-casual Mexican category &middot; 2024</p>
+    </div>
+    <div class="brand-pills">
+      <span class="brand-pill pill-chip">Chipotle</span>
+      <span style="font-size:14px;color:var(--text-tertiary)">vs</span>
+      <span class="brand-pill pill-qdob">Qdoba</span>
+    </div>
+  </div>
+
+  <p class="section-label">Summary metrics</p>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <p class="metric-label">Overall winner</p>
+      <p class="metric-val" style="color:var(--chip)">Chipotle</p>
+      <p class="metric-note">8.1 composite vs 7.4</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Taste winner</p>
+      <p class="metric-val" style="color:var(--chip)">Chipotle</p>
+      <p class="metric-note">8.4 vs 7.8 (blind tests)</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Best menu variety</p>
+      <p class="metric-val" style="color:var(--qdob)">Qdoba</p>
+      <p class="metric-note">8.6 — queso, sauces, mix-ins</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Best value</p>
+      <p class="metric-val" style="color:var(--qdob)">Qdoba</p>
+      <p class="metric-note">Free guac saves ~$2.95/visit</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Brand trust</p>
+      <p class="metric-val" style="color:var(--chip)">Chipotle</p>
+      <p class="metric-note">8.5 — "Food with integrity"</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Portion size</p>
+      <p class="metric-val" style="color:var(--chip)">Chipotle</p>
+      <p class="metric-note">8.2 — consistently bigger</p>
+    </div>
+  </div>
+
+  <p class="section-label">Head-to-head dimension scores</p>
+  <div class="h2h-header">
+    <span class="h2h-brand left">Chipotle</span>
+    <span></span>
+    <span class="h2h-brand right">Qdoba</span>
+  </div>
+  <div class="h2h-grid" id="h2h"></div>
+
+  <p class="section-label">Dimension radar</p>
+  <div class="legend-row">
+    <span><span class="legend-dot" style="background:var(--chip-mid)"></span>Chipotle</span>
+    <span><span class="legend-dot" style="background:var(--qdob-mid)"></span>Qdoba</span>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="radarChart" role="img" aria-label="Radar chart comparing Chipotle and Qdoba across seven consumer dimensions">Chipotle: taste 8.4, ingredient quality 9.0, menu variety 7.1, value 7.6, brand trust 8.5, portion size 8.2, atmosphere 7.8. Qdoba: taste 7.8, ingredient quality 7.4, menu variety 8.6, value 8.3, brand trust 7.0, portion size 7.4, atmosphere 7.2.</canvas>
+  </div>
+
+  <p class="section-label">Preference by audience segment</p>
+  <div class="tab-row" id="seg-tabs">
+    <button class="tab-btn active" data-seg="overall">Overall</button>
+    <button class="tab-btn" data-seg="18-25">Ages 18–25</button>
+    <button class="tab-btn" data-seg="26-35">Ages 26–35</button>
+    <button class="tab-btn" data-seg="36-50">Ages 36–50</button>
+    <button class="tab-btn" data-seg="healthconscious">Health-conscious</button>
+    <button class="tab-btn" data-seg="valueseeker">Value-seekers</button>
+    <button class="tab-btn" data-seg="colorado">Colorado locals</button>
+  </div>
+  <div id="seg-chart"></div>
+
+  <p class="section-label">Menu item scores (blind taste test, 1–10)</p>
+  <div class="menu-grid">
+    <div class="menu-card" style="border-top: 3px solid var(--chip);">
+      <h3 style="color:var(--chip)">Chipotle</h3>
+      <div class="menu-row"><span class="menu-item-name">Chicken burrito bowl</span><span class="menu-score" style="color:var(--chip)">8.6 <span class="win-badge win-chip">winner</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">Carnitas</span><span class="menu-score" style="color:var(--chip)">8.8 <span class="win-badge win-chip">winner</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">Steak</span><span class="menu-score" style="color:var(--chip)">8.3 <span class="win-badge win-chip">winner</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">Guacamole</span><span class="menu-score" style="color:var(--chip)">9.0 <span class="win-badge win-chip">winner</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">Queso</span><span class="menu-score" style="color:var(--text-secondary)">6.8</span></div>
+      <div class="menu-row"><span class="menu-item-name">Chips</span><span class="menu-score" style="color:var(--chip)">8.1 <span class="win-badge win-chip">winner</span></span></div>
+    </div>
+    <div class="menu-card" style="border-top: 3px solid var(--qdob);">
+      <h3 style="color:var(--qdob)">Qdoba</h3>
+      <div class="menu-row"><span class="menu-item-name">Chicken burrito bowl</span><span class="menu-score" style="color:var(--text-secondary)">7.9</span></div>
+      <div class="menu-row"><span class="menu-item-name">Smoked brisket</span><span class="menu-score" style="color:var(--qdob)">8.5 <span class="win-badge win-qdob">exclusive</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">Steak</span><span class="menu-score" style="color:var(--text-secondary)">7.7</span></div>
+      <div class="menu-row"><span class="menu-item-name">Guacamole (free)</span><span class="menu-score" style="color:var(--qdob)">8.4 <span class="win-badge win-qdob">free!</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">3-cheese queso</span><span class="menu-score" style="color:var(--qdob)">9.1 <span class="win-badge win-qdob">winner</span></span></div>
+      <div class="menu-row"><span class="menu-item-name">Breakfast menu</span><span class="menu-score" style="color:var(--qdob)">7.8 <span class="win-badge win-qdob">exclusive</span></span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Pricing breakdown</p>
+  <div class="pricing-row">
+    <div class="price-card" style="border-top: 3px solid var(--chip);">
+      <h3 style="color:var(--chip)">Chipotle</h3>
+      <div class="price-stat"><span class="price-label">Chicken bowl (no guac)</span><span style="font-weight:700">~$9.10</span></div>
+      <div class="price-stat"><span class="price-label">With guacamole</span><span style="font-weight:700">~$12.05</span></div>
+      <div class="price-stat"><span class="price-label">Steak bowl</span><span style="font-weight:700">~$11.20</span></div>
+      <div class="price-stat"><span class="price-label">Price hike since 2018</span><span style="font-weight:700">+19% (chicken)</span></div>
+      <div class="price-stat"><span class="price-label">Reward program</span><span style="font-weight:700;color:var(--chip)">Chipotle Rewards ✓</span></div>
+    </div>
+    <div class="price-card" style="border-top: 3px solid var(--qdob);">
+      <h3 style="color:var(--qdob)">Qdoba</h3>
+      <div class="price-stat"><span class="price-label">Chicken bowl (no guac)</span><span style="font-weight:700">~$10.55</span></div>
+      <div class="price-stat"><span class="price-label">With guacamole</span><span style="font-weight:700;color:var(--qdob)">~$10.55 (free!)</span></div>
+      <div class="price-stat"><span class="price-label">Steak bowl</span><span style="font-weight:700">~$12.50</span></div>
+      <div class="price-stat"><span class="price-label">Price hike since 2018</span><span style="font-weight:700">+21.5% (chicken)</span></div>
+      <div class="price-stat"><span class="price-label">Reward program</span><span style="font-weight:700;color:var(--qdob)">Qdoba Rewards ✓</span></div>
+    </div>
+  </div>
+
+  <p class="section-label">Brand verdicts</p>
+  <div class="verdict-grid">
+    <div class="verdict-card" style="border-top: 3px solid var(--chip);">
+      <span class="verdict-tag" style="background:var(--chip-light);color:var(--chip)">Chipotle</span>
+      <p class="verdict-text">Wins on ingredient quality, brand trust, and consistency. The "Food with Integrity" positioning resonates deeply with health-conscious consumers. Protein quality — especially chicken and carnitas — leads category in blind tests. Loses points on queso and menu variety.</p>
+    </div>
+    <div class="verdict-card" style="border-top: 3px solid var(--qdob);">
+      <span class="verdict-tag" style="background:var(--qdob-light);color:var(--qdob)">Qdoba</span>
+      <p class="verdict-text">Wins decisively on queso (9.1), menu variety, and free guacamole policy. Unique proteins like smoked brisket differentiate it meaningfully. Struggles to match Chipotle's brand equity and ingredient trust story despite comparable food quality.</p>
+    </div>
+    <div class="verdict-card">
+      <span class="verdict-tag" style="background:var(--bg-secondary);color:var(--text-secondary)">Choose Chipotle if...</span>
+      <p class="verdict-text">You prioritize ingredient sourcing, consistent protein quality, and brand reputation. Bigger portions tip the value equation in Chipotle's favor for heavy eaters, even at similar base prices.</p>
+    </div>
+    <div class="verdict-card">
+      <span class="verdict-tag" style="background:var(--bg-secondary);color:var(--text-secondary)">Choose Qdoba if...</span>
+      <p class="verdict-text">You love guac on everything (free adds up fast), want queso that actually slaps, or crave menu variety like smoked brisket or breakfast. Also the regional favorite in Colorado, where it edges Chipotle in location density.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Qdoba vs Chipotle — Consumer UX Research 2024</span>
+    <span>Synthetic benchmark data &middot; n=1,540 &middot; Ages 18–50</span>
+  </div>
+</div>
+
+<script>
+const dims = ['Taste & flavor','Ingredient quality','Menu variety','Value for money','Brand trust','Portion size','Atmosphere'];
+const chipScores = [8.4, 9.0, 7.1, 7.6, 8.5, 8.2, 7.8];
+const qdobScores = [7.8, 7.4, 8.6, 8.3, 7.0, 7.4, 7.2];
+
+// H2H bars
+const h2h = document.getElementById('h2h');
+dims.forEach((dim, i) => {
+  const cs = chipScores[i], qs = qdobScores[i];
+  h2h.innerHTML += `<div class="h2h-row">
+    <div class="h2h-side left">
+      <span class="h2h-score left">${cs}</span>
+      <div class="h2h-track"><div class="h2h-fill" style="width:${cs*10}%;background:var(--chip-mid)"></div></div>
+    </div>
+    <span class="h2h-dim">${dim}</span>
+    <div class="h2h-side">
+      <div class="h2h-track"><div class="h2h-fill" style="width:${qs*10}%;background:var(--qdob-mid)"></div></div>
+      <span class="h2h-score right">${qs}</span>
+    </div>
+  </div>`;
+});
+
+// Radar
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: dims,
+    datasets: [
+      { label:'Chipotle', data: chipScores, borderColor:'#639922', backgroundColor:'rgba(99,153,34,0.12)', borderWidth:2, pointBackgroundColor:'#639922', pointRadius:4 },
+      { label:'Qdoba',    data: qdobScores, borderColor:'#d85a30', backgroundColor:'rgba(216,90,48,0.12)', borderWidth:2, pointBackgroundColor:'#d85a30', pointRadius:4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        min: 5, max: 10, ticks: { stepSize: 1, font: { size: 11 }, color:'#888' },
+        grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' },
+        angleLines: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' },
+        pointLabels: { font: { size: 12 }, color: isDark ? '#b4b2a9' : '#5f5e5a' }
+      }
+    }
+  }
+});
+
+// Segment data — [chipotle%, qdoba%]
+const segDetails = {
+  overall:        { 'Overall preference':[62,38], 'Repurchase intent':[64,36], 'Recommend to friend':[66,34], 'Better quality perception':[71,29] },
+  '18-25':        { 'Overall preference':[58,42], 'Repurchase intent':[60,40], 'Recommend to friend':[62,38], 'Better quality perception':[67,33] },
+  '26-35':        { 'Overall preference':[65,35], 'Repurchase intent':[67,33], 'Recommend to friend':[70,30], 'Better quality perception':[75,25] },
+  '36-50':        { 'Overall preference':[63,37], 'Repurchase intent':[62,38], 'Recommend to friend':[64,36], 'Better quality perception':[70,30] },
+  healthconscious:{ 'Overall preference':[78,22], 'Repurchase intent':[80,20], 'Recommend to friend':[79,21], 'Better quality perception':[88,12] },
+  valueseeker:    { 'Overall preference':[44,56], 'Repurchase intent':[42,58], 'Recommend to friend':[48,52], 'Better quality perception':[65,35] },
+  colorado:       { 'Overall preference':[48,52], 'Repurchase intent':[47,53], 'Recommend to friend':[49,51], 'Better quality perception':[62,38] }
+};
+
+function renderSeg(seg) {
+  const d = segDetails[seg];
+  let html = '';
+  Object.entries(d).forEach(([label, [cp, qp]]) => {
+    html += `<div class="seg-item">
+      <div class="seg-label-row">
+        <span style="color:var(--text-secondary)">${label}</span>
+        <span><span style="color:var(--chip);font-weight:700">${cp}% Chipotle</span> &nbsp; <span style="color:var(--qdob);font-weight:700">${qp}% Qdoba</span></span>
+      </div>
+      <div class="seg-track">
+        <div class="seg-fill-chip" style="width:${cp}%"></div>
+        <div class="seg-fill-qdob" style="width:${qp}%"></div>
+      </div>
+      <div class="seg-legend"><span>← Chipotle</span><span>Qdoba →</span></div>
+    </div>`;
+  });
+  document.getElementById('seg-chart').innerHTML = html;
+}
+renderSeg('overall');
+
+document.getElementById('seg-tabs').addEventListener('click', e => {
+  if (!e.target.matches('.tab-btn')) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  renderSeg(e.target.dataset.seg);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beverage UX Research — 2024 Consumer Study</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-tertiary: #eeede8;
+    --text-primary: #1a1a18;
+    --text-secondary: #5f5e5a;
+    --text-tertiary: #888780;
+    --border: rgba(0,0,0,0.12);
+    --border-strong: rgba(0,0,0,0.22);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1c;
+      --bg-secondary: #2a2a28;
+      --bg-tertiary: #333331;
+      --text-primary: #f0efea;
+      --text-secondary: #b4b2a9;
+      --text-tertiary: #888780;
+      --border: rgba(255,255,255,0.12);
+      --border-strong: rgba(255,255,255,0.22);
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  .container { max-width: 820px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); border: 0.5px solid var(--border); padding: 2rem 2.5rem 3rem; }
+  .dash-title { font-size: 22px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .dash-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 2rem; }
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-tertiary); margin: 2rem 0 .75rem; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .metric-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: .85rem 1rem; }
+  .metric-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .metric-val { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+  .metric-note { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .tab-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tab-btn { font-size: 13px; padding: 6px 14px; border-radius: 999px; border: 0.5px solid var(--border-strong); background: var(--bg); color: var(--text-secondary); cursor: pointer; transition: all .15s; }
+  .tab-btn:hover { background: var(--bg-secondary); }
+  .tab-btn.active { background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-strong); font-weight: 500; }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+  .bar-container { margin-bottom: 10px; }
+  .bar-label-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 13px; color: var(--text-secondary); }
+  .bar-track { height: 22px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .chart-wrap { position: relative; width: 100%; height: 320px; margin-top: 1.5rem; }
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
+  .insight-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+  .insight-brand { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+  .insight-text { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+  .finding-card { background: var(--bg-secondary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; border-top: 3px solid var(--border-strong); }
+  .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--text-tertiary); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 560px) {
+    .container { padding: 1.25rem 1.25rem 2rem; }
+    .insight-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <p class="dash-title">Beverage UX Research — 2024 Consumer Study</p>
+  <p class="dash-sub">n = 1,240 respondents &middot; Ages 18–45 &middot; Metrics rated 1–10 &middot; Synthetic benchmark data</p>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <p class="metric-label">Brands studied</p>
+      <p class="metric-val">6</p>
+      <p class="metric-note">Across 3 categories</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Dimensions measured</p>
+      <p class="metric-val">5</p>
+      <p class="metric-note">Taste · Health · Pack · Value · Brand</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Top overall score</p>
+      <p class="metric-val">8.4</p>
+      <p class="metric-note">Olipop — highest composite</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Best value pick</p>
+      <p class="metric-val">7.9</p>
+      <p class="metric-note">Sparkling Ice</p>
+    </div>
+  </div>
+
+  <p class="section-label">Explore by dimension</p>
+  <div class="tab-row" id="tabs">
+    <button class="tab-btn active" data-dim="overall">Overall composite</button>
+    <button class="tab-btn" data-dim="taste">Taste &amp; flavor</button>
+    <button class="tab-btn" data-dim="health">Health perception</button>
+    <button class="tab-btn" data-dim="packaging">Packaging &amp; design</button>
+    <button class="tab-btn" data-dim="value">Value for money</button>
+    <button class="tab-btn" data-dim="brand">Brand sentiment</button>
+  </div>
+
+  <div class="legend-row">
+    <span><span class="legend-dot" style="background:#3B6D11"></span>Olipop</span>
+    <span><span class="legend-dot" style="background:#1D9E75"></span>Poppi</span>
+    <span><span class="legend-dot" style="background:#3266ad"></span>Coke/Pepsi Zero</span>
+    <span><span class="legend-dot" style="background:#BA7517"></span>Sparkling Ice</span>
+    <span><span class="legend-dot" style="background:#A32D2D"></span>Diet Coke/Pepsi</span>
+  </div>
+
+  <div id="bar-chart"></div>
+
+  <p class="section-label">Dimension radar — all brands</p>
+  <div class="chart-wrap">
+    <canvas id="radarChart" role="img" aria-label="Radar chart comparing five UX dimensions for all beverage brands">Olipop: taste 8.1, health 9.2, packaging 8.8, value 7.5, brand 8.4. Poppi: taste 7.9, health 8.7, packaging 8.5, value 7.2, brand 8.1. Coke/Pepsi Zero: taste 8.3, health 5.1, packaging 6.8, value 8.2, brand 7.3. Sparkling Ice: taste 7.4, health 6.1, packaging 7.0, value 7.9, brand 7.0. Diet Coke/Pepsi: taste 7.8, health 4.2, packaging 6.0, value 7.6, brand 6.5.</canvas>
+  </div>
+
+  <p class="section-label">Brand-level insights</p>
+  <div class="insight-grid">
+    <div class="insight-card" style="border-top: 3px solid #3B6D11;">
+      <p class="insight-brand" style="color:#3B6D11">Olipop</p>
+      <p class="insight-text">Dominates health perception (9.2/10) and packaging design. Consumers see it as a "functional treat." Weaker value scores signal premium pricing friction.</p>
+    </div>
+    <div class="insight-card" style="border-top: 3px solid #1D9E75;">
+      <p class="insight-brand" style="color:#1D9E75">Poppi</p>
+      <p class="insight-text">Strong health perception (8.7) and millennial brand affinity. Social media presence inflates brand sentiment. Close second to Olipop in nearly every dimension.</p>
+    </div>
+    <div class="insight-card" style="border-top: 3px solid #3266ad;">
+      <p class="insight-brand" style="color:#3266ad">Coke / Pepsi Zero</p>
+      <p class="insight-text">Highest taste satisfaction (8.3) among all segments. However, health perception scores are low (5.1). Massive distribution boosts value-for-money perception.</p>
+    </div>
+    <div class="insight-card" style="border-top: 3px solid #BA7517;">
+      <p class="insight-brand" style="color:#BA7517">Sparkling Ice</p>
+      <p class="insight-text">Best value-for-money rating (7.9). Seen as a budget-friendly middle ground. Health perception is modest; packaging is considered dated by younger consumers.</p>
+    </div>
+    <div class="insight-card" style="border-top: 3px solid #A32D2D;">
+      <p class="insight-brand" style="color:#A32D2D">Diet Coke / Pepsi</p>
+      <p class="insight-text">Lowest health perception (4.2) — aspartame concerns persist. Strong nostalgia lifts brand sentiment in 35–45 age cohort despite declining overall category interest.</p>
+    </div>
+    <div class="finding-card">
+      <p class="insight-brand" style="color:var(--text-secondary)">Key finding</p>
+      <p class="insight-text">Health-forward brands (Olipop, Poppi) are winning brand sentiment &amp; perception wars despite lower value scores. Legacy diet sodas must close the health story gap to remain competitive.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Beverage UX Research &mdash; 2024 Consumer Study</span>
+    <span>Synthetic benchmark data &middot; n=1,240 &middot; Ages 18–45</span>
+  </div>
+</div>
+
+<script>
+const data = {
+  taste:     { Olipop: 8.1, Poppi: 7.9, 'Coke/Pepsi Zero': 8.3, 'Sparkling Ice': 7.4, 'Diet Coke/Pepsi': 7.8 },
+  health:    { Olipop: 9.2, Poppi: 8.7, 'Coke/Pepsi Zero': 5.1, 'Sparkling Ice': 6.1, 'Diet Coke/Pepsi': 4.2 },
+  packaging: { Olipop: 8.8, Poppi: 8.5, 'Coke/Pepsi Zero': 6.8, 'Sparkling Ice': 7.0, 'Diet Coke/Pepsi': 6.0 },
+  value:     { Olipop: 7.5, Poppi: 7.2, 'Coke/Pepsi Zero': 8.2, 'Sparkling Ice': 7.9, 'Diet Coke/Pepsi': 7.6 },
+  brand:     { Olipop: 8.4, Poppi: 8.1, 'Coke/Pepsi Zero': 7.3, 'Sparkling Ice': 7.0, 'Diet Coke/Pepsi': 6.5 }
+};
+const brands = ['Olipop','Poppi','Coke/Pepsi Zero','Sparkling Ice','Diet Coke/Pepsi'];
+const colors = { Olipop:'#3B6D11', Poppi:'#1D9E75', 'Coke/Pepsi Zero':'#3266ad', 'Sparkling Ice':'#BA7517', 'Diet Coke/Pepsi':'#A32D2D' };
+
+function composite(brand) {
+  return +((data.taste[brand]+data.health[brand]+data.packaging[brand]+data.value[brand]+data.brand[brand])/5).toFixed(1);
+}
+const overallData = {};
+brands.forEach(b => overallData[b] = composite(b));
+data.overall = overallData;
+
+function renderBars(dim) {
+  const container = document.getElementById('bar-chart');
+  const sorted = [...brands].sort((a,b) => data[dim][b] - data[dim][a]);
+  container.innerHTML = sorted.map(brand => {
+    const score = data[dim][brand];
+    const pct = (score/10*100).toFixed(1);
+    return `<div class="bar-container">
+      <div class="bar-label-row">
+        <span>${brand}</span>
+        <span style="font-weight:600;color:var(--text-primary)">${score}</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${colors[brand]}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+renderBars('overall');
+
+document.getElementById('tabs').addEventListener('click', e => {
+  if (!e.target.matches('.tab-btn')) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  renderBars(e.target.dataset.dim);
+});
+
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const radarColors = [
+  { c:'#3B6D11', bg:'rgba(59,109,17,0.12)' },
+  { c:'#1D9E75', bg:'rgba(29,158,117,0.12)' },
+  { c:'#3266ad', bg:'rgba(50,102,173,0.12)' },
+  { c:'#BA7517', bg:'rgba(186,117,23,0.12)' },
+  { c:'#A32D2D', bg:'rgba(163,45,45,0.12)' }
+];
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Taste','Health','Packaging','Value','Brand'],
+    datasets: brands.map((brand,i) => ({
+      label: brand,
+      data: [data.taste[brand], data.health[brand], data.packaging[brand], data.value[brand], data.brand[brand]],
+      borderColor: radarColors[i].c,
+      backgroundColor: radarColors[i].bg,
+      borderWidth: 1.5,
+      pointBackgroundColor: radarColors[i].c,
+      pointRadius: 3
+    }))
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        min: 3, max: 10,
+        ticks: { stepSize: 2, font: { size: 11 }, color: isDark ? '#888' : '#888' },
+        grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' },
+        angleLines: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' },
+        pointLabels: { font: { size: 13 }, color: isDark ? '#b4b2a9' : '#5f5e5a' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

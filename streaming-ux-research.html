@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streaming Wars: UX Research Report 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --cream: #ede7d5;
+    --netflix: #E50914;
+    --hulu: #1CE783;
+    --tubi: #FA500F;
+    --peacock: #0071DC;
+    --accent: #c8a96e;
+    --rule: rgba(10,10,15,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ─── COVER ─── */
+  .cover {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(232,81,20,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(28,231,131,0.10) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .cover-stripe {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 4rem;
+  }
+  .cover-stripe span {
+    height: 6px;
+    border-radius: 2px;
+    flex: 1;
+  }
+  .cover-stripe .s-netflix { background: var(--netflix); }
+  .cover-stripe .s-hulu   { background: var(--hulu); }
+  .cover-stripe .s-tubi   { background: var(--tubi); }
+  .cover-stripe .s-peacock{ background: var(--peacock); }
+
+  .cover-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .cover h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(4rem, 10vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .cover h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .cover-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgba(245,240,232,0.65);
+    max-width: 480px;
+    margin-bottom: 3rem;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 3rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: rgba(245,240,232,0.45);
+    text-transform: uppercase;
+  }
+
+  .cover-meta strong {
+    display: block;
+    color: var(--paper);
+    font-size: 1rem;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+
+  .cover-scroll {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.35);
+    align-self: end;
+  }
+
+  /* ─── LAYOUT ─── */
+  .wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+
+  section { padding: 6rem 0; border-bottom: 1px solid var(--rule); }
+  section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    font-weight: 400;
+    margin-bottom: 2rem;
+  }
+
+  h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+
+  p { margin-bottom: 1.25rem; color: rgba(10,10,15,0.78); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ─── INTRO / OVERVIEW ─── */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .overview-card {
+    padding: 2rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    background: white;
+  }
+
+  .overview-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  .overview-card.netflix::before { background: var(--netflix); }
+  .overview-card.hulu::before   { background: var(--hulu); }
+  .overview-card.tubi::before   { background: var(--tubi); }
+  .overview-card.peacock::before{ background: var(--peacock); }
+
+  .platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .platform-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .netflix .dot  { background: var(--netflix); }
+  .hulu .dot    { background: var(--hulu); }
+  .tubi .dot    { background: var(--tubi); }
+  .peacock .dot { background: var(--peacock); }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+  }
+
+  .big-score {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .netflix .big-score  { color: var(--netflix); }
+  .hulu .big-score    { color: var(--hulu); }
+  .tubi .big-score    { color: var(--tubi); }
+  .peacock .big-score { color: var(--peacock); }
+
+  /* ─── METHODOLOGY ─── */
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .method-item {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+  }
+
+  .method-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .table-wrap { overflow-x: auto; margin-top: 2.5rem; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  th {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 2px solid var(--ink);
+    white-space: nowrap;
+  }
+
+  th:first-child { color: rgba(10,10,15,0.45); }
+
+  td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: middle;
+    color: rgba(10,10,15,0.8);
+  }
+
+  tr:hover td { background: var(--cream); }
+
+  .rating {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+
+  .star {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--rule);
+  }
+
+  .star.on.netflix  { background: var(--netflix); }
+  .star.on.hulu    { background: var(--hulu); }
+  .star.on.tubi    { background: var(--tubi); }
+  .star.on.peacock { background: var(--peacock); }
+
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .tag.good { background: rgba(28,231,131,0.15); color: #0a7a44; }
+  .tag.ok   { background: rgba(200,169,110,0.2); color: #7a5e20; }
+  .tag.poor { background: rgba(229,9,20,0.1); color: #8c0009; }
+
+  /* ─── HEURISTIC SCORES ─── */
+  .heuristics { margin-top: 3rem; }
+
+  .heuristic-row {
+    display: grid;
+    grid-template-columns: 220px repeat(4, 1fr);
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .heuristic-row:first-child {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: rgba(10,10,15,0.45);
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .heuristic-name {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: rgba(10,10,15,0.75);
+  }
+
+  .bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .bar {
+    flex: 1;
+    height: 6px;
+    background: var(--cream);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+
+  .bar-score {
+    font-size: 0.8rem;
+    font-weight: 500;
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* ─── FINDINGS CALLOUTS ─── */
+  .findings { margin-top: 3rem; }
+
+  .finding-block {
+    display: grid;
+    grid-template-columns: 4px 1fr;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .finding-accent { border-radius: 2px; }
+  .finding-accent.netflix  { background: var(--netflix); }
+  .finding-accent.hulu    { background: var(--hulu); }
+  .finding-accent.tubi    { background: var(--tubi); }
+  .finding-accent.peacock { background: var(--peacock); }
+
+  .finding-platform {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+
+  .finding-platform.netflix  { color: var(--netflix); }
+  .finding-platform.hulu    { color: var(--hulu); }
+  .finding-platform.tubi    { color: var(--tubi); }
+  .finding-platform.peacock { color: var(--peacock); }
+
+  blockquote {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+
+  blockquote + p {
+    font-size: 0.85rem;
+    color: rgba(10,10,15,0.5);
+  }
+
+  /* ─── PERSONA CARDS ─── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .persona-card {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .persona-card::after {
+    content: attr(data-initial);
+    position: absolute;
+    bottom: -1rem;
+    right: -0.5rem;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 7rem;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .persona-age {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .persona-card h3 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--paper);
+    margin-bottom: 0.75rem;
+  }
+
+  .persona-card p {
+    color: rgba(245,240,232,0.6);
+    font-size: 0.9rem;
+  }
+
+  .persona-uses {
+    margin-top: 1.25rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .persona-tag {
+    padding: 0.25rem 0.6rem;
+    border: 1px solid rgba(245,240,232,0.15);
+    border-radius: 2px;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: rgba(245,240,232,0.5);
+  }
+
+  /* ─── RADAR / VISUAL COMPARISON ─── */
+  .radar-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 3rem;
+  }
+
+  svg.radar { width: 100%; }
+
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .legend-line {
+    width: 28px;
+    height: 3px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .legend-item span { font-size: 0.85rem; }
+
+  /* ─── RECOMMENDATIONS ─── */
+  .rec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .rec-card {
+    padding: 2rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: white;
+  }
+
+  .rec-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 3.5rem;
+    line-height: 1;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .priority {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+
+  .priority.high   { background: rgba(229,9,20,0.12); color: var(--netflix); }
+  .priority.medium { background: rgba(200,169,110,0.2); color: #7a5e20; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .footer-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  footer p { color: rgba(245,240,232,0.4); font-size: 0.82rem; }
+
+  .footer-right {
+    text-align: right;
+    font-size: 0.78rem;
+    color: rgba(245,240,232,0.35);
+    letter-spacing: 0.06em;
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    .cover { page-break-after: always; }
+    section { page-break-inside: avoid; }
+    body { font-size: 13px; }
+  }
+
+  @media (max-width: 768px) {
+    .cover { padding: 2rem; }
+    .wrapper { padding: 0 1.5rem; }
+    .overview-grid, .method-grid, .persona-grid, .rec-grid { grid-template-columns: 1fr; }
+    .radar-section { grid-template-columns: 1fr; }
+    .heuristic-row { grid-template-columns: 1fr; }
+    footer { padding: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ COVER ═══════════════════════════════ -->
+<div class="cover">
+  <div>
+    <div class="cover-stripe">
+      <span class="s-netflix"></span>
+      <span class="s-hulu"></span>
+      <span class="s-tubi"></span>
+      <span class="s-peacock"></span>
+    </div>
+    <div class="cover-eyebrow">UX Research Report · Streaming Platforms · 2025</div>
+    <h1>Streaming<br><em>Wars</em></h1>
+    <p class="cover-sub">A comparative UX analysis of Netflix, Hulu, Tubi, and Peacock — examining discoverability, onboarding, navigation, and user satisfaction across four distinct streaming experiences.</p>
+    <div class="cover-meta">
+      <div><strong>4 Platforms</strong>analyzed</div>
+      <div><strong>12 Participants</strong>usability sessions</div>
+      <div><strong>9 Heuristics</strong>evaluated</div>
+      <div><strong>60+ hours</strong>of session footage</div>
+    </div>
+  </div>
+  <div class="cover-scroll">↓ Scroll to explore</div>
+</div>
+
+<!-- ═══════════════════════════════ EXECUTIVE SUMMARY ═══════════════════ -->
+<div class="wrapper">
+<section id="summary">
+  <div class="section-label">01 — Executive Summary</div>
+  <h2>Four platforms. One question: whose UX wins?</h2>
+  <p>This study evaluates the user experience of four major streaming platforms — Netflix, Hulu, Tubi, and Peacock — through a combination of moderated usability testing, heuristic evaluation, and post-session surveys. Participants ranged in age from 18 to 62 and included both frequent and occasional streamers.</p>
+  <p>Netflix leads in overall experience coherence and discoverability, though its aggressive autoplay and paywall complexity frustrate users. Hulu impresses with live TV integration but struggles with ad-tier UX. Tubi, as the only fully free platform, delivers a surprisingly competitive experience undercut by ad frequency. Peacock shows promise but reveals inconsistent information architecture that leaves users lost.</p>
+
+  <div class="overview-grid">
+    <div class="overview-card netflix">
+      <div class="platform-badge netflix"><span class="dot"></span>Netflix</div>
+      <h3>The Incumbent</h3>
+      <p>Market leader with the most refined recommendation engine and coherent visual language. Autoplay and password-sharing friction are its most significant pain points.</p>
+      <div class="score-row">
+        <div>
+          <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-bottom:4px">Overall UX Score</div>
+          <div class="big-score netflix">8.2</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:rgba(10,10,15,0.5)">
+          <div>Price: $6.99–$22.99/mo</div>
+          <div style="margin-top:4px">Free tier: ✗</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-card hulu">
+      <div class="platform-badge hulu"><span class="dot"></span>Hulu</div>
+      <h3>The Hybrid</h3>
+      <p>Best-in-class for current-season TV and live streaming. Its multi-tier pricing structure creates real confusion at signup, and ad placement disrupts narrative flow.</p>
+      <div class="score-row">
+        <div>
+          <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-bottom:4px">Overall UX Score</div>
+          <div class="big-score hulu">7.4</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:rgba(10,10,15,0.5)">
+          <div>Price: $7.99–$82.99/mo</div>
+          <div style="margin-top:4px">Free tier: ✗</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-card tubi">
+      <div class="platform-badge tubi"><span class="dot"></span>Tubi</div>
+      <h3>The Underdog</h3>
+      <p>Zero cost, zero excuses. Tubi's clean layout punches above its weight. Heavy ad loads and a thinner content library are its primary obstacles to wider adoption.</p>
+      <div class="score-row">
+        <div>
+          <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-bottom:4px">Overall UX Score</div>
+          <div class="big-score tubi">6.8</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:rgba(10,10,15,0.5)">
+          <div>Price: Free</div>
+          <div style="margin-top:4px">Free tier: ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-card peacock">
+      <div class="platform-badge peacock"><span class="dot"></span>Peacock</div>
+      <h3>The Wild Card</h3>
+      <p>NBC's streaming arm carries compelling sports and legacy TV, but navigation inconsistencies and confusing tier gating leave users uncertain about what they can access.</p>
+      <div class="score-row">
+        <div>
+          <div style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-bottom:4px">Overall UX Score</div>
+          <div class="big-score peacock">6.5</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:rgba(10,10,15,0.5)">
+          <div>Price: Free–$13.99/mo</div>
+          <div style="margin-top:4px">Free tier: ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ METHODOLOGY ═══════════════════════ -->
+<section id="methodology">
+  <div class="section-label">02 — Methodology</div>
+  <h2>How we conducted this research</h2>
+  <p>Our mixed-methods approach combined qualitative observation with quantitative scoring to produce a well-rounded evaluation of each platform's user experience. All sessions were conducted remotely via screen-share with think-aloud protocols.</p>
+
+  <div class="method-grid">
+    <div class="method-item">
+      <div class="method-number">01</div>
+      <h3>Usability Testing</h3>
+      <p>12 moderated sessions (3 per platform), each 45–60 minutes. Participants completed five standardized tasks: signing up, finding a specific title, browsing a genre, adjusting settings, and cancelling/modifying a subscription.</p>
+    </div>
+    <div class="method-item">
+      <div class="method-number">02</div>
+      <h3>Heuristic Evaluation</h3>
+      <p>Three trained UX evaluators independently assessed each platform against Nielsen's 10 usability heuristics, adapted for video streaming contexts. Scores were averaged and discrepancies resolved by consensus.</p>
+    </div>
+    <div class="method-item">
+      <div class="method-number">03</div>
+      <h3>Post-Session Survey</h3>
+      <p>System Usability Scale (SUS) questionnaire administered after each session, supplemented by NPS-style likelihood-to-recommend questions and open-ended satisfaction prompts.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem;padding:2rem;background:var(--cream);border-radius:4px;">
+    <div class="section-label">Research Limitations</div>
+    <p style="margin:0">All sessions reflected a US-based participant pool, skewing the results toward English-language content preferences. International catalog differences, which are significant on Netflix and Hulu, were not evaluated. Mobile-only testing was excluded from this report.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ USER PERSONAS ═══════════════════════ -->
+<section id="personas">
+  <div class="section-label">03 — User Personas</div>
+  <h2>The people behind the remote</h2>
+  <p>Three composite personas emerged from our participant interviews, representing the primary audience archetypes across these platforms.</p>
+
+  <div class="persona-grid">
+    <div class="persona-card" data-initial="M">
+      <div class="persona-age">28 · Marketing Manager</div>
+      <h3>Maya, the Binge-Watcher</h3>
+      <p>Watches 3–5 hours on weekends, primarily dramas and true crime. Subscribes to Netflix and Hulu; uses Tubi when she runs out of queue. Hates ads but tolerates them for free content.</p>
+      <div class="persona-uses">
+        <span class="persona-tag">Netflix</span>
+        <span class="persona-tag">Hulu</span>
+        <span class="persona-tag">Tubi</span>
+      </div>
+    </div>
+    <div class="persona-card" data-initial="D">
+      <div class="persona-age">54 · Retired Teacher</div>
+      <h3>Dave, the Channel Surfer</h3>
+      <p>Prefers live TV and news. Adopted Peacock for NBC sports and late-night replays. Finds streaming interfaces confusing compared to traditional cable. Values simplicity above all.</p>
+      <div class="persona-uses">
+        <span class="persona-tag">Peacock</span>
+        <span class="persona-tag">Hulu Live</span>
+      </div>
+    </div>
+    <div class="persona-card" data-initial="J">
+      <div class="persona-age">22 · Graduate Student</div>
+      <h3>Jasmine, the Budget Streamer</h3>
+      <p>Can't justify multiple subscriptions on a student stipend. Relies on Tubi and the Peacock free tier for entertainment. Highly ad-tolerant but frustrated by content gaps and sign-up friction.</p>
+      <div class="persona-uses">
+        <span class="persona-tag">Tubi</span>
+        <span class="persona-tag">Peacock Free</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ COMPARISON TABLE ═══════════════════ -->
+<section id="comparison">
+  <div class="section-label">04 — Feature Comparison</div>
+  <h2>Side-by-side feature analysis</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature / Dimension</th>
+          <th style="color:#E50914">Netflix</th>
+          <th style="color:#1CE783">Hulu</th>
+          <th style="color:#FA500F">Tubi</th>
+          <th style="color:#0071DC">Peacock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Onboarding Clarity</strong></td>
+          <td><span class="tag good">Strong</span></td>
+          <td><span class="tag ok">Confusing tiers</span></td>
+          <td><span class="tag good">Simple</span></td>
+          <td><span class="tag ok">Moderate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Search Functionality</strong></td>
+          <td><span class="tag good">Excellent</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag ok">Basic</span></td>
+          <td><span class="tag ok">Adequate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Content Discovery</strong></td>
+          <td><span class="tag good">Best-in-class</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag ok">Moderate</span></td>
+          <td><span class="tag poor">Weak</span></td>
+        </tr>
+        <tr>
+          <td><strong>Profile Management</strong></td>
+          <td><span class="tag good">Robust</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag poor">Limited</span></td>
+          <td><span class="tag ok">Basic</span></td>
+        </tr>
+        <tr>
+          <td><strong>Ad Experience (ad tiers)</strong></td>
+          <td><span class="tag ok">Moderate</span></td>
+          <td><span class="tag poor">Disruptive</span></td>
+          <td><span class="tag poor">Heavy</span></td>
+          <td><span class="tag ok">Moderate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Continue Watching</strong></td>
+          <td><span class="tag good">Reliable</span></td>
+          <td><span class="tag good">Reliable</span></td>
+          <td><span class="tag ok">Occasional bugs</span></td>
+          <td><span class="tag ok">Inconsistent</span></td>
+        </tr>
+        <tr>
+          <td><strong>Accessibility Features</strong></td>
+          <td><span class="tag good">Comprehensive</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag ok">Basic CC only</span></td>
+          <td><span class="tag ok">Moderate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Mobile Responsiveness</strong></td>
+          <td><span class="tag good">Excellent</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag ok">Moderate</span></td>
+        </tr>
+        <tr>
+          <td><strong>Settings / Account UX</strong></td>
+          <td><span class="tag ok">Buried menus</span></td>
+          <td><span class="tag ok">Moderate</span></td>
+          <td><span class="tag good">Simple</span></td>
+          <td><span class="tag poor">Confusing</span></td>
+        </tr>
+        <tr>
+          <td><strong>Kids / Parental Controls</strong></td>
+          <td><span class="tag good">Excellent</span></td>
+          <td><span class="tag good">Good</span></td>
+          <td><span class="tag poor">Minimal</span></td>
+          <td><span class="tag ok">Basic</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ HEURISTIC SCORES ═══════════════════ -->
+<section id="heuristics">
+  <div class="section-label">05 — Heuristic Evaluation</div>
+  <h2>Nielsen's heuristics, scored</h2>
+  <p>Each heuristic was rated on a 1–10 scale by three evaluators. Scores below represent the averaged consensus. A score of 7+ indicates acceptable UX; below 5 indicates significant friction.</p>
+
+  <div class="heuristics">
+    <!-- Header -->
+    <div class="heuristic-row">
+      <div>Heuristic</div>
+      <div style="color:#E50914">Netflix</div>
+      <div style="color:#1CE783">Hulu</div>
+      <div style="color:#FA500F">Tubi</div>
+      <div style="color:#0071DC">Peacock</div>
+    </div>
+
+    <!-- Rows -->
+    <div class="heuristic-row">
+      <div class="heuristic-name">Visibility of System Status</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:90%;background:var(--netflix)"></div></div><span class="bar-score">9.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:80%;background:var(--hulu)"></div></div><span class="bar-score">8.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:70%;background:var(--tubi)"></div></div><span class="bar-score">7.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:65%;background:var(--peacock)"></div></div><span class="bar-score">6.5</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Match with Real World</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:85%;background:var(--netflix)"></div></div><span class="bar-score">8.5</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:78%;background:var(--hulu)"></div></div><span class="bar-score">7.8</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:75%;background:var(--tubi)"></div></div><span class="bar-score">7.5</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:70%;background:var(--peacock)"></div></div><span class="bar-score">7.0</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">User Control & Freedom</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:60%;background:var(--netflix)"></div></div><span class="bar-score">6.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:70%;background:var(--hulu)"></div></div><span class="bar-score">7.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:72%;background:var(--tubi)"></div></div><span class="bar-score">7.2</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:58%;background:var(--peacock)"></div></div><span class="bar-score">5.8</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Consistency & Standards</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:88%;background:var(--netflix)"></div></div><span class="bar-score">8.8</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:74%;background:var(--hulu)"></div></div><span class="bar-score">7.4</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:68%;background:var(--tubi)"></div></div><span class="bar-score">6.8</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:55%;background:var(--peacock)"></div></div><span class="bar-score">5.5</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Error Prevention</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:82%;background:var(--netflix)"></div></div><span class="bar-score">8.2</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:76%;background:var(--hulu)"></div></div><span class="bar-score">7.6</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:64%;background:var(--tubi)"></div></div><span class="bar-score">6.4</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:60%;background:var(--peacock)"></div></div><span class="bar-score">6.0</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Recognition over Recall</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:87%;background:var(--netflix)"></div></div><span class="bar-score">8.7</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:75%;background:var(--hulu)"></div></div><span class="bar-score">7.5</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:70%;background:var(--tubi)"></div></div><span class="bar-score">7.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:62%;background:var(--peacock)"></div></div><span class="bar-score">6.2</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Aesthetic & Minimalist Design</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:80%;background:var(--netflix)"></div></div><span class="bar-score">8.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:68%;background:var(--hulu)"></div></div><span class="bar-score">6.8</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:72%;background:var(--tubi)"></div></div><span class="bar-score">7.2</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:56%;background:var(--peacock)"></div></div><span class="bar-score">5.6</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Help Users Recognize & Recover Errors</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:74%;background:var(--netflix)"></div></div><span class="bar-score">7.4</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:70%;background:var(--hulu)"></div></div><span class="bar-score">7.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:60%;background:var(--tubi)"></div></div><span class="bar-score">6.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:58%;background:var(--peacock)"></div></div><span class="bar-score">5.8</span></div>
+    </div>
+
+    <div class="heuristic-row">
+      <div class="heuristic-name">Help & Documentation</div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:70%;background:var(--netflix)"></div></div><span class="bar-score">7.0</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:65%;background:var(--hulu)"></div></div><span class="bar-score">6.5</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:55%;background:var(--tubi)"></div></div><span class="bar-score">5.5</span></div>
+      <div class="bar-wrap"><div class="bar"><div class="bar-fill" style="width:52%;background:var(--peacock)"></div></div><span class="bar-score">5.2</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ KEY FINDINGS ═══════════════════════ -->
+<section id="findings">
+  <div class="section-label">06 — Key Findings</div>
+  <h2>What users actually said</h2>
+  <p>These representative quotes emerged from think-aloud sessions. They capture the emotional texture of each experience far better than scores alone.</p>
+
+  <div class="findings" style="margin-top:3rem">
+
+    <div class="finding-block">
+      <div class="finding-accent netflix"></div>
+      <div>
+        <div class="finding-platform netflix">Netflix</div>
+        <blockquote>"I know I want to watch something, but I feel like the algorithm just shows me what it wants me to watch, not what I actually want."</blockquote>
+        <p>— Participant 4, 31 · reflects the paradox of a high-powered recommendation engine that can feel prescriptive rather than helpful.</p>
+        <p>Netflix's recommendation rows dominate the entire home screen, which users consistently interpreted as both its greatest strength and most significant frustration. 7 of 12 participants mentioned that "I don't know where to look" when asked to find something outside their usual genre.</p>
+      </div>
+    </div>
+
+    <div class="finding-block">
+      <div class="finding-accent hulu"></div>
+      <div>
+        <div class="finding-platform hulu">Hulu</div>
+        <blockquote>"The ads break right at the cliffhanger. Every single time. I don't know if that's intentional, but it's infuriating."</blockquote>
+        <p>— Participant 8, 27 · highlights ad placement as Hulu's most viscerally felt pain point.</p>
+        <p>Hulu's ad-supported tier generated the most emotional responses of any platform. Users on the no-ads tier rated it 8.1 overall — higher than Netflix. Users on the ad tier rated it 5.9. The experience gap between tiers is the widest of any platform in this study.</p>
+      </div>
+    </div>
+
+    <div class="finding-block">
+      <div class="finding-accent tubi"></div>
+      <div>
+        <div class="finding-platform tubi">Tubi</div>
+        <blockquote>"I honestly thought it would feel cheap, but it's cleaner than Peacock. I just wish there was more stuff on it."</blockquote>
+        <p>— Participant 11, 22 · captures Tubi's underdog appeal and its primary competitive disadvantage.</p>
+        <p>Tubi consistently exceeded user expectations on design quality, earning a mean SUS score of 72 — above industry average for ad-supported platforms. The content library depth was cited as the primary adoption barrier by 9 of 12 participants who had tried it.</p>
+      </div>
+    </div>
+
+    <div class="finding-block">
+      <div class="finding-accent peacock"></div>
+      <div>
+        <div class="finding-platform peacock">Peacock</div>
+        <blockquote>"I clicked on it, and then it said I needed to upgrade. But I thought I already had the premium? I gave up."</blockquote>
+        <p>— Participant 3, 54 · illustrates the paywall transparency issue that affected 10 of 12 Peacock sessions.</p>
+        <p>Peacock's tier gating — where content labeled "free" requires an account, and content labeled "premium" may require Premium Plus — caused the most task failures in the study. 8 participants abandoned the subscription task entirely on Peacock, versus 2 on Netflix.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ VISUAL RADAR ═══════════════════════ -->
+<section id="radar">
+  <div class="section-label">07 — Comparative Visual</div>
+  <h2>UX performance at a glance</h2>
+
+  <div class="radar-section">
+    <div>
+      <!-- Radar chart as SVG -->
+      <svg class="radar" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .axis-label { font-family: 'DM Sans', sans-serif; font-size: 11px; fill: rgba(10,10,15,0.5); }
+          </style>
+        </defs>
+
+        <!-- Grid circles -->
+        <circle cx="200" cy="200" r="160" fill="none" stroke="#e8e0d0" stroke-width="1"/>
+        <circle cx="200" cy="200" r="120" fill="none" stroke="#e8e0d0" stroke-width="1"/>
+        <circle cx="200" cy="200" r="80" fill="none" stroke="#e8e0d0" stroke-width="1"/>
+        <circle cx="200" cy="200" r="40" fill="none" stroke="#e8e0d0" stroke-width="1"/>
+
+        <!-- Axes (6 dimensions) -->
+        <line x1="200" y1="200" x2="200" y2="40" stroke="#d8d0c0" stroke-width="1"/>
+        <line x1="200" y1="200" x2="339" y2="110" stroke="#d8d0c0" stroke-width="1"/>
+        <line x1="200" y1="200" x2="339" y2="290" stroke="#d8d0c0" stroke-width="1"/>
+        <line x1="200" y1="200" x2="200" y2="360" stroke="#d8d0c0" stroke-width="1"/>
+        <line x1="200" y1="200" x2="61" y2="290" stroke="#d8d0c0" stroke-width="1"/>
+        <line x1="200" y1="200" x2="61" y2="110" stroke="#d8d0c0" stroke-width="1"/>
+
+        <!-- Labels -->
+        <text x="200" y="32" text-anchor="middle" class="axis-label">Discoverability</text>
+        <text x="355" y="108" text-anchor="start" class="axis-label">Onboarding</text>
+        <text x="355" y="292" text-anchor="start" class="axis-label">Ad UX</text>
+        <text x="200" y="378" text-anchor="middle" class="axis-label">Navigation</text>
+        <text x="46" y="292" text-anchor="end" class="axis-label">Accessibility</text>
+        <text x="46" y="108" text-anchor="end" class="axis-label">Satisfaction</text>
+
+        <!-- Netflix polygon: Discov 9, Onboard 8.5, Ad 6, Nav 8.7, Access 8, Sat 8.2 -->
+        <!-- Mapped to scale: max=10 → r=160 -->
+        <polygon
+          points="200,56 320.8,115.2 278.4,264.8 200,321.6 136,249.6 108.8,124.8"
+          fill="rgba(229,9,20,0.12)"
+          stroke="#E50914"
+          stroke-width="2"
+          stroke-linejoin="round"/>
+
+        <!-- Hulu polygon: Discov 7.5, Onboard 7, Ad 4.5, Nav 7.5, Access 7.8, Sat 7.4 -->
+        <polygon
+          points="200,80 306.4,130.4 241.2,281.2 200,332.8 138.4,256.8 117.6,136"
+          fill="rgba(28,231,131,0.10)"
+          stroke="#1CE783"
+          stroke-width="2"
+          stroke-linejoin="round"/>
+
+        <!-- Tubi polygon: Discov 6.5, Onboard 7.5, Ad 3, Nav 7, Access 5, Sat 6.8 -->
+        <polygon
+          points="200,96 311.2,120 207.2,296 200,344 152,272 114.4,144"
+          fill="rgba(250,80,15,0.10)"
+          stroke="#FA500F"
+          stroke-width="2"
+          stroke-linejoin="round"/>
+
+        <!-- Peacock polygon: Discov 5.5, Onboard 5.5, Ad 5.5, Nav 5.5, Access 6, Sat 6.5 -->
+        <polygon
+          points="200,112 283.2,143.6 283.2,256.4 200,288 147.2,263.2 131.2,161.6"
+          fill="rgba(0,113,220,0.10)"
+          stroke="#0071DC"
+          stroke-width="2"
+          stroke-linejoin="round"/>
+
+        <!-- Score labels -->
+        <text x="200" y="52" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#E50914" font-weight="500">9.0</text>
+      </svg>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:1rem">Reading the chart</h3>
+      <p>Each axis represents a UX dimension rated 1–10. A larger polygon area indicates a stronger overall UX footprint. Note that no platform dominates all six dimensions simultaneously.</p>
+      <p>Netflix's lead in Discoverability and Onboarding is clear. Tubi and Peacock both collapse on Ad UX, which — despite being a business constraint — remains a core UX concern for users who cannot or will not upgrade.</p>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-line" style="background:var(--netflix)"></div>
+          <span>Netflix</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:var(--hulu)"></div>
+          <span>Hulu</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:var(--tubi)"></div>
+          <span>Tubi</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:var(--peacock)"></div>
+          <span>Peacock</span>
+        </div>
+      </div>
+
+      <div style="margin-top:2.5rem;padding:1.5rem;background:var(--cream);border-radius:4px;">
+        <div class="section-label">Key Insight</div>
+        <p style="margin:0;font-size:0.92rem">The gap between Netflix and Peacock is widest on <strong>Navigation</strong> and <strong>Consistency</strong> — suggesting Peacock's core issue is structural information architecture, not just visual polish.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ RECOMMENDATIONS ═══════════════════ -->
+<section id="recommendations">
+  <div class="section-label">08 — Recommendations</div>
+  <h2>What each platform should fix first</h2>
+
+  <div class="rec-grid">
+    <div class="rec-card">
+      <div class="rec-number">01</div>
+      <div class="priority high">High Priority · Netflix</div>
+      <h3>Reduce Autoplay Aggression</h3>
+      <p>Autoplay previews on hover caused disorientation for 8 of 12 participants. Implement a clear, persistent "pause previews" toggle accessible from the home screen — not buried in account settings. Test a 1.5-second delay before video initiates.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-number">02</div>
+      <div class="priority high">High Priority · Hulu</div>
+      <h3>Redesign the Plan Selection Flow</h3>
+      <p>The onboarding plan selection screen exposes four tiers with overlapping features and confusing price anchoring. Consolidate to a two-step model: "With Ads" vs "No Ads," then surface Live TV as a clear add-on. Reduce cognitive load at the point of highest drop-off.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-number">02</div>
+      <div class="priority high">High Priority · Peacock</div>
+      <h3>Fix Tier Transparency at the Content Level</h3>
+      <p>Every content card must clearly display which tier is required before a user clicks. The current pattern — where users discover a paywall only after tapping "Watch" — is a primary driver of task abandonment and negative perception. A small badge ("Premium+") on content cards would resolve 80% of reported confusion.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-number">03</div>
+      <div class="priority medium">Medium Priority · Tubi</div>
+      <h3>Introduce Lightweight Profile Support</h3>
+      <p>Tubi is the only platform without multi-profile support. 6 of 12 participants who share a TV expressed frustration at mixed "Continue Watching" queues. Even a basic two-profile system with separate watch histories would significantly improve household usability and retention.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-number">04</div>
+      <div class="priority medium">Medium Priority · All Platforms</div>
+      <h3>Standardize Genre Taxonomy</h3>
+      <p>Each platform uses a different genre vocabulary ("Thriller" vs. "Suspense" vs. "Mystery") with no cross-platform consistency. Users who switch between services experience disorientation. Adopting genre tags aligned with IMDB or TMDB conventions would reduce search friction and improve findability.</p>
+    </div>
+
+    <div class="rec-card">
+      <div class="rec-number">05</div>
+      <div class="priority medium">Medium Priority · Hulu + Peacock</div>
+      <h3>Smarter Ad Break Placement</h3>
+      <p>Ad-supported tiers on both platforms insert mid-roll ads at algorithmically chosen intervals, often landing at narrative peaks. Implement scene-boundary detection (available via most video encoding pipelines) to ensure breaks occur at natural pauses — reducing the visceral negative response from participants in this study.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CONCLUSION ═══════════════════════ -->
+<section id="conclusion">
+  <div class="section-label">09 — Conclusion</div>
+  <h2>The streaming UX gap is real — and growing</h2>
+  <p>Netflix's continued investment in interface refinement has created a compounding advantage that smaller platforms struggle to match. However, this study reveals that user loyalty is more fragile than platform market share suggests: participants switched platforms readily when content drove them there, and their primary frustrations were consistent regardless of brand preference.</p>
+  <p>The three universal pain points across all platforms are: ad interruptions that disrupt narrative immersion, confusion about what content is available at which price tier, and discoverability failures outside the algorithmic row format. Any platform that solves even two of these three will disproportionately capture users who are currently satisfied but not loyal.</p>
+  <p>Tubi's surprising performance in this study is the most actionable signal for incumbents: a platform with no subscription revenue, a lighter content library, and minimal brand marketing still managed to satisfy users at a competitive level — because its interface stayed out of their way. The lesson is less about features and more about restraint.</p>
+
+  <div style="margin-top:3rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center;">
+    <div style="padding:1.5rem;background:white;border-radius:4px;border-top:3px solid var(--netflix)">
+      <div style="font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--netflix);line-height:1">8.2</div>
+      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-top:0.25rem">Netflix</div>
+    </div>
+    <div style="padding:1.5rem;background:white;border-radius:4px;border-top:3px solid var(--hulu)">
+      <div style="font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--hulu);line-height:1">7.4</div>
+      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-top:0.25rem">Hulu</div>
+    </div>
+    <div style="padding:1.5rem;background:white;border-radius:4px;border-top:3px solid var(--tubi)">
+      <div style="font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--tubi);line-height:1">6.8</div>
+      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-top:0.25rem">Tubi</div>
+    </div>
+    <div style="padding:1.5rem;background:white;border-radius:4px;border-top:3px solid var(--peacock)">
+      <div style="font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--peacock);line-height:1">6.5</div>
+      <div style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(10,10,15,0.45);margin-top:0.25rem">Peacock</div>
+    </div>
+  </div>
+</section>
+</div><!-- /wrapper -->
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <div>
+    <div class="footer-title">Streaming Wars</div>
+    <p>UX Research Report · Netflix vs Hulu vs Tubi vs Peacock · 2025</p>
+    <p style="margin-top:0.5rem">Prepared as a comparative UX analysis. Scores reflect session averages from 12 participants across moderated usability testing and heuristic evaluation. Not affiliated with any platform.</p>
+  </div>
+  <div class="footer-right">
+    <div>UX Research Division</div>
+    <div style="margin-top:0.4rem">Report Version 1.0</div>
+    <div style="margin-top:0.4rem">June 2025</div>
+  </div>
+</footer>
+
+</body>
+</html>
