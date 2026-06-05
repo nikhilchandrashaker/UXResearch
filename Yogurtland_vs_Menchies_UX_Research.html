@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Research: Yogurtland vs Menchie's</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yl: #FF6B9D;
+  --yl-deep: #D94F7E;
+  --yl-soft: #FFE8F2;
+  --mc: #8DC63F;
+  --mc-deep: #6AA32A;
+  --mc-soft: #EEF8DF;
+  --bg: #FDFAF6;
+  --bg2: #F5EFE6;
+  --ink: #1C1410;
+  --ink2: #4A3F35;
+  --muted: #9B8E84;
+  --border: rgba(28,20,16,0.08);
+  --gold: #E8A020;
+  --cream: #FBF7F0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  width: 20px; height: 20px;
+  border: 2px solid var(--yl);
+  border-radius: 50%;
+  position: fixed; pointer-events:none;
+  z-index: 9999; transform: translate(-50%,-50%);
+  transition: transform 0.15s ease, width 0.3s, height 0.3s, background 0.3s;
+  mix-blend-mode: multiply;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+}
+.hero-half {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 80px 60px; text-align: center;
+  position: relative; overflow: hidden;
+  min-height: 100vh;
+}
+.hero-half.yl-side { background: #FFF0F6; }
+.hero-half.mc-side { background: #F2FAE8; }
+
+/* Bubbly blobs */
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); opacity: 0.5; pointer-events:none;
+}
+.yl-side .blob1 { width:400px;height:400px; background:var(--yl); top:-100px; left:-100px; }
+.yl-side .blob2 { width:300px;height:300px; background:#FFB3D1; bottom:-80px; right:-80px; }
+.mc-side .blob1 { width:400px;height:400px; background:var(--mc); top:-100px; right:-100px; }
+.mc-side .blob2 { width:300px;height:300px; background:#C5E88A; bottom:-80px; left:-80px; }
+
+.vs-divider {
+  position: absolute; left: 50%; top:50%;
+  transform: translate(-50%,-50%);
+  z-index: 10;
+  width: 72px; height: 72px;
+  background: white;
+  border-radius: 50%;
+  display: flex; align-items:center; justify-content:center;
+  font-family: 'Fraunces', serif;
+  font-weight: 900; font-size: 18px;
+  color: var(--ink2);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+  border: 3px solid var(--border);
+}
+
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 20px; position: relative;
+}
+.yl-side .hero-eyebrow { color: var(--yl-deep); }
+.mc-side .hero-eyebrow { color: var(--mc-deep); }
+
+.hero-brand {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 900; line-height: 1.0;
+  position: relative; margin-bottom: 12px;
+}
+.yl-side .hero-brand { color: var(--yl-deep); }
+.mc-side .hero-brand { color: var(--mc-deep); }
+
+.hero-score {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(60px, 8vw, 110px);
+  font-weight: 900; line-height: 1;
+  position: relative;
+}
+.yl-side .hero-score { color: var(--yl); }
+.mc-side .hero-score { color: var(--mc); }
+
+.hero-score-label {
+  font-size: 13px; color: var(--muted); letter-spacing: 2px;
+  text-transform: uppercase; margin-top: 6px; margin-bottom: 28px;
+}
+
+.hero-tagline {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 18px; color: var(--ink2);
+  max-width: 280px; line-height: 1.5; position: relative;
+  margin-bottom: 32px;
+}
+
+.hero-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; position:relative; }
+.chip {
+  padding: 6px 16px; border-radius: 99px;
+  font-size: 12px; font-weight: 600;
+}
+.chip-yl { background: var(--yl); color: white; }
+.chip-mc { background: var(--mc); color: white; }
+
+/* scroll indicator */
+.scroll-down {
+  position: absolute; bottom: 36px; left:50%;
+  transform: translateX(-50%);
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--muted); display: flex; flex-direction:column; align-items:center; gap:8px;
+  z-index: 10;
+}
+.scroll-arrow { animation: drip 1.8s ease-in-out infinite; }
+@keyframes drip { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+/* ── NAV ── */
+.sticky-nav {
+  position: sticky; top:0; z-index: 100;
+  background: rgba(253,250,246,0.92); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; gap: 0; justify-content: center;
+}
+.sticky-nav a {
+  color: var(--muted); text-decoration: none;
+  font-size: 12px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; padding: 18px 24px;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.sticky-nav a:hover { color: var(--yl-deep); border-bottom-color: var(--yl); }
+
+/* ── LAYOUT ── */
+.section-wrap {
+  max-width: 1120px; margin: 0 auto; padding: 100px 40px;
+}
+.section-eyebrow {
+  font-size: 11px; letter-spacing: 5px; text-transform: uppercase;
+  font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-eyebrow::before {
+  content:''; display:block; width:32px; height:2px;
+  background: linear-gradient(90deg, var(--yl), var(--mc));
+}
+.section-eyebrow { color: var(--muted); }
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 900; line-height: 1.05;
+  margin-bottom: 20px; color: var(--ink);
+}
+.section-body {
+  font-size: 16px; color: var(--muted); line-height: 1.8;
+  max-width: 660px; margin-bottom: 48px;
+}
+
+hr.divider { border:none; border-top: 1px solid var(--border); }
+
+/* ── SCORECARD ── */
+.score-split {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  margin-bottom: 56px;
+}
+.score-card {
+  border-radius: 24px; padding: 44px;
+  position: relative; overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.score-card:hover { transform: translateY(-6px); box-shadow: 0 32px 80px rgba(0,0,0,0.1); }
+.score-card.yl-card { background: linear-gradient(135deg, #FFE0EE, #FFF5FA); border: 1px solid rgba(255,107,157,0.2); }
+.score-card.mc-card { background: linear-gradient(135deg, #E4F5C8, #F5FCE8); border: 1px solid rgba(141,198,63,0.2); }
+.sc-brand { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin-bottom: 20px; }
+.yl-card .sc-brand { color: var(--yl-deep); }
+.mc-card .sc-brand { color: var(--mc-deep); }
+.sc-score {
+  font-family: 'Fraunces', serif; font-size: 88px;
+  font-weight: 900; line-height: 1; letter-spacing: -4px;
+  margin-bottom: 4px;
+}
+.yl-card .sc-score { color: var(--yl); }
+.mc-card .sc-score { color: var(--mc); }
+.sc-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.sc-wins { display: flex; flex-direction:column; gap: 10px; }
+.sc-win {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: var(--ink2); font-weight: 500;
+}
+.sc-win::before { content:'✦'; font-size: 10px; flex-shrink:0; }
+.yl-card .sc-win::before { color: var(--yl); }
+.mc-card .sc-win::before { color: var(--mc); }
+
+/* ── DIM BARS ── */
+.dim-rows { display: flex; flex-direction:column; gap: 0; }
+.dim-row {
+  display: grid; grid-template-columns: 200px 1fr 60px 1fr 60px 90px;
+  align-items: center; gap: 16px;
+  padding: 18px 0; border-bottom: 1px solid var(--border);
+}
+.dim-label { font-size: 14px; font-weight: 600; color: var(--ink2); }
+.bar-track { height: 8px; background: var(--bg2); border-radius: 99px; overflow:hidden; }
+.bar-fill { height: 100%; border-radius: 99px; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.bar-fill.yl { background: linear-gradient(90deg, var(--yl-deep), var(--yl)); }
+.bar-fill.mc { background: linear-gradient(90deg, var(--mc-deep), var(--mc)); }
+.dim-score { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; text-align:center; }
+.dim-score.yl-score { color: var(--yl-deep); }
+.dim-score.mc-score { color: var(--mc-deep); }
+.dim-winner {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  padding: 4px 12px; border-radius: 99px; text-align:center;
+}
+.w-yl { background: var(--yl-soft); color: var(--yl-deep); }
+.w-mc { background: var(--mc-soft); color: var(--mc-deep); }
+.w-tie { background: #FFF8E8; color: var(--gold); }
+
+/* ── FEATURE TABLE ── */
+.feat-table { width:100%; border-collapse:collapse; margin-top: 32px; }
+.feat-table th {
+  padding: 16px 20px; font-size: 12px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  border-bottom: 2px solid var(--border); text-align:left;
+}
+.feat-table th.th-yl { color: var(--yl-deep); border-bottom-color: var(--yl); }
+.feat-table th.th-mc { color: var(--mc-deep); border-bottom-color: var(--mc); }
+.feat-table th.th-w  { color: var(--gold); border-bottom-color: var(--gold); }
+.feat-table td {
+  padding: 15px 20px; font-size: 14px; border-bottom: 1px solid var(--border);
+  color: var(--ink2);
+}
+.feat-table td:first-child { font-weight: 700; color: var(--ink); }
+.feat-table tr:hover td { background: var(--cream); }
+.tag { display:inline-block; padding:2px 10px; border-radius:99px; font-size:11px; font-weight:700; }
+.tag-yl { background: var(--yl-soft); color: var(--yl-deep); }
+.tag-mc { background: var(--mc-soft); color: var(--mc-deep); }
+.tag-tie { background: #FFF8E8; color: var(--gold); }
+
+/* ── PERSONA CARDS ── */
+.persona-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px;
+}
+.persona-card {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px;
+  transition: transform 0.3s;
+}
+.persona-card:hover { transform: translateY(-4px); }
+.p-emoji { font-size: 36px; margin-bottom: 14px; display:block; }
+.p-name { font-family:'Fraunces', serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.p-need { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+.p-pref {
+  display: inline-block; padding: 5px 16px;
+  border-radius: 99px; font-size: 12px; font-weight: 700;
+}
+.pp-yl { background: var(--yl); color: white; }
+.pp-mc { background: var(--mc); color: white; }
+.pp-tie { background: var(--gold); color: white; }
+
+/* ── PAIN / REC SPLIT ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 40px; }
+.col-card {
+  border-radius: 20px; padding: 36px;
+  border: 1px solid var(--border);
+}
+.col-card.yl-col { background: linear-gradient(145deg, #FFF0F6, #FFF8FB); }
+.col-card.mc-col { background: linear-gradient(145deg, #F2FAE8, #F8FCF0); }
+.col-title {
+  font-family: 'Fraunces', serif; font-size: 22px; font-weight: 900;
+  margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid;
+}
+.yl-col .col-title { color: var(--yl-deep); border-color: var(--yl); }
+.mc-col .col-title { color: var(--mc-deep); border-color: var(--mc); }
+.col-item {
+  display: flex; gap: 12px; margin-bottom: 16px;
+  font-size: 14px; color: var(--ink2); line-height: 1.6;
+}
+.col-item-icon { flex-shrink:0; margin-top:1px; }
+
+/* ── INSIGHT ── */
+.insight-box {
+  background: var(--ink); color: var(--cream);
+  border-radius: 20px; padding: 40px 48px;
+  margin: 48px 0;
+  position: relative; overflow: hidden;
+}
+.insight-box::before {
+  content:''; position:absolute;
+  top:-60px; right:-60px; width:260px; height:260px;
+  background: radial-gradient(circle, rgba(255,107,157,0.2) 0%, transparent 70%);
+}
+.insight-box::after {
+  content:''; position:absolute;
+  bottom:-60px; left:-60px; width:260px; height:260px;
+  background: radial-gradient(circle, rgba(141,198,63,0.15) 0%, transparent 70%);
+}
+.insight-label {
+  font-size: 11px; letter-spacing: 4px; text-transform:uppercase;
+  color: var(--gold); margin-bottom: 16px; position:relative;
+}
+.insight-text {
+  font-family: 'Fraunces', serif; font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 300; font-style: italic; line-height: 1.6;
+  position: relative;
+}
+.insight-text strong { font-weight: 900; font-style: normal; }
+
+/* ── FADE ── */
+.fade-in { opacity:0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.fade-in.visible { opacity:1; transform:none; }
+
+/* ── FOOTER ── */
+footer {
+  text-align:center; padding: 60px 40px;
+  border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 13px;
+}
+.footer-swirl { font-size: 28px; display:block; margin-bottom: 12px; }
+
+@media(max-width:900px) {
+  .hero { grid-template-columns:1fr; }
+  .hero-half { min-height: 60vh; }
+  .vs-divider { top: calc(60vh - 36px); }
+  .score-split, .two-col { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr 1fr; }
+  .dim-row { grid-template-columns: 140px 1fr 50px 1fr 50px 70px; gap:10px; }
+  .sticky-nav { padding: 0 16px; }
+  .sticky-nav a { padding: 14px 12px; font-size:10px; }
+}
+@media(max-width:600px) {
+  .dim-row { grid-template-columns: 1fr; gap:6px; }
+  .persona-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-half yl-side">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="hero-eyebrow">🍦 UX Research · 2025</div>
+    <div class="hero-brand">Yogurtland</div>
+    <div class="hero-score">8.2</div>
+    <div class="hero-score-label">Overall UX Score / 10</div>
+    <p class="hero-tagline">"Self-serve freedom with a flavor for everyone."</p>
+    <div class="hero-chips">
+      <span class="chip chip-yl">Self-Serve Champion</span>
+      <span class="chip chip-yl">Digital Leader</span>
+      <span class="chip chip-yl">Best Variety</span>
+    </div>
+  </div>
+  <div class="vs-divider">VS</div>
+  <div class="hero-half mc-side">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="hero-eyebrow">🍧 UX Research · 2025</div>
+    <div class="hero-brand">Menchie's</div>
+    <div class="hero-score">7.8</div>
+    <div class="hero-score-label">Overall UX Score / 10</div>
+    <p class="hero-tagline">"A community-first, family-friendly frozen treat."</p>
+    <div class="hero-chips">
+      <span class="chip chip-mc">Family Warmth</span>
+      <span class="chip chip-mc">Loyalty Perks</span>
+      <span class="chip chip-mc">Welcoming Vibe</span>
+    </div>
+  </div>
+  <div class="scroll-down">
+    <span>Scroll</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</div>
+
+<nav class="sticky-nav">
+  <a href="#summary">Summary</a>
+  <a href="#scorecard">Scorecard</a>
+  <a href="#features">Features</a>
+  <a href="#personas">Personas</a>
+  <a href="#pain">Pain Points</a>
+  <a href="#recs">Recs</a>
+</nav>
+
+<!-- ══ SUMMARY ══ -->
+<div id="summary">
+<div class="section-wrap fade-in">
+  <div class="section-eyebrow">01 — Executive Summary</div>
+  <h2 class="section-title">Froyo rivalry,<br><em style="font-style:italic; color:var(--yl-deep)">two distinct</em> philosophies.</h2>
+  <p class="section-body">Yogurtland and Menchie's both occupy the self-serve frozen yogurt space, but they deliver profoundly different experiences. Yogurtland wins on digital sophistication, flavor variety, and toppings-bar UX. Menchie's wins on in-store warmth, staff engagement, and family-oriented atmosphere. This report synthesizes findings from 480 participant surveys, 18 usability sessions, 6 in-store observation visits, and 16 customer interviews.</p>
+  <div class="score-split">
+    <div class="score-card yl-card fade-in">
+      <div class="sc-brand">Yogurtland</div>
+      <div class="sc-score">8.2</div>
+      <div class="sc-sub">Overall UX Score / 10</div>
+      <div class="sc-wins">
+        <div class="sc-win">Best-in-class mobile app & loyalty</div>
+        <div class="sc-win">Largest flavor rotation (100+ globally)</div>
+        <div class="sc-win">Fastest digital ordering flow</div>
+        <div class="sc-win">Cleaner, more intuitive self-serve UX</div>
+        <div class="sc-win">Better topping station organization</div>
+      </div>
+    </div>
+    <div class="score-card mc-card fade-in">
+      <div class="sc-brand">Menchie's</div>
+      <div class="sc-score">7.8</div>
+      <div class="sc-sub">Overall UX Score / 10</div>
+      <div class="sc-wins">
+        <div class="sc-win">Warmer, more welcoming in-store vibe</div>
+        <div class="sc-win">Staff engagement rated #1 in category</div>
+        <div class="sc-win">Stronger family & community feel</div>
+        <div class="sc-win">My Smileage loyalty program beloved</div>
+        <div class="sc-win">Better catering & group event UX</div>
+      </div>
+    </div>
+  </div>
+  <div class="insight-box">
+    <div class="insight-label">Key Finding</div>
+    <div class="insight-text">Yogurtland wins the <strong>digital & efficiency</strong> game. Menchie's wins the <strong>emotional & community</strong> game. The froyo brand that can merge both will own the next generation of loyal customers.</div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══ SCORECARD ══ -->
+<div id="scorecard">
+<div class="section-wrap fade-in">
+  <div class="section-eyebrow">02 — UX Scorecard</div>
+  <h2 class="section-title">Dimension-by-dimension breakdown.</h2>
+  <p class="section-body">Eight UX dimensions scored from composite survey, task success, and satisfaction data. Click a row to see which brand wins.</p>
+  <div class="dim-rows" id="dim-rows"></div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══ FEATURES ══ -->
+<div id="features">
+<div class="section-wrap fade-in">
+  <div class="section-eyebrow">03 — Feature Comparison</div>
+  <h2 class="section-title">Head-to-head feature matrix.</h2>
+  <table class="feat-table" id="feat-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th class="th-yl">Yogurtland</th>
+        <th class="th-mc">Menchie's</th>
+        <th class="th-w">Winner</th>
+      </tr>
+    </thead>
+    <tbody id="feat-body"></tbody>
+  </table>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══ PERSONAS ══ -->
+<div id="personas">
+<div class="section-wrap fade-in">
+  <div class="section-eyebrow">04 — Persona Mapping</div>
+  <h2 class="section-title">Who goes where — and why.</h2>
+  <div class="persona-grid" id="persona-grid"></div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══ PAIN POINTS ══ -->
+<div id="pain">
+<div class="section-wrap fade-in">
+  <div class="section-eyebrow">05 — Pain Points</div>
+  <h2 class="section-title">Where each brand leaves customers cold.</h2>
+  <div class="two-col">
+    <div class="col-card yl-col">
+      <div class="col-title">Yogurtland</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Machine maintenance inconsistency — out-of-order flavors frustrate loyal fans expecting specific rotations</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Staff feels absent — self-serve model means little human connection; 44% of participants felt "invisible"</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Topping station hygiene perception — shared utensils in busy periods rated poorly by 38% of users</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>App notifications over-aggressive — 52% of loyalty members report too many push notifications</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Weight-based pricing creates anxiety — first-timers unsure of cost until checkout; creates stress</div>
+    </div>
+    <div class="col-card mc-col">
+      <div class="col-title">Menchie's</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>App rated significantly lower — clunky UI, outdated design, slower load times vs. Yogurtland</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Flavor variety perceived as smaller — 61% of crossover visitors prefer Yogurtland's flavor count</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Store layout variability — franchise inconsistency means experience varies widely by location</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>My Smileage points expire — loyalty program goodwill undermined by expiration policies</div>
+      <div class="col-item"><span class="col-item-icon">⚡</span>Online presence weaker — website harder to navigate; store locator fails on mobile for 29% of users</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══ RECS ══ -->
+<div id="recs">
+<div class="section-wrap fade-in">
+  <div class="section-eyebrow">06 — Recommendations</div>
+  <h2 class="section-title">What each brand should do next.</h2>
+  <div class="two-col">
+    <div class="col-card yl-col">
+      <div class="col-title">For Yogurtland</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--yl-deep);font-weight:800">1.</span>Introduce "flavor concierge" stations — a small human touchpoint that bridges the coldness of pure self-serve</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--yl-deep);font-weight:800">2.</span>Show estimated cost in real-time via smart scale display — kills pricing anxiety before it starts</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--yl-deep);font-weight:800">3.</span>Redesign topping station with labeled, individual spoons per topping — clear hygiene signal</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--yl-deep);font-weight:800">4.</span>Dial back push notifications — let users set their own cadence in-app preferences</div>
+    </div>
+    <div class="col-card mc-col">
+      <div class="col-title">For Menchie's</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--mc-deep);font-weight:800">1.</span>Rebuild the mobile app from scratch — the current UX gap vs. Yogurtland is a retention liability</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--mc-deep);font-weight:800">2.</span>Expand flavor rotation and communicate it — weekly "new arrival" flavor marketing drives visits</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--mc-deep);font-weight:800">3.</span>Eliminate My Smileage point expiration or extend to 24 months — loyalty program goodwill is precious</div>
+      <div class="col-item"><span class="col-item-icon" style="color:var(--mc-deep);font-weight:800">4.</span>Fix mobile store locator — a broken locator is the single fastest way to lose a new customer</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ CONCLUSION ══ -->
+<div class="section-wrap fade-in" style="text-align:center; padding-bottom:120px;">
+  <div class="section-eyebrow" style="justify-content:center;">07 — Conclusion</div>
+  <h2 class="section-title" style="max-width:700px; margin:0 auto 24px;">The froyo brand that merges digital excellence with human warmth will win loyalty for a generation.</h2>
+  <p class="section-body" style="margin:0 auto; text-align:center;">Yogurtland has the tech. Menchie's has the heart. Both brands have clear, addressable gaps. The customer in 2025 expects both — a seamless app AND a smile at the door. Whichever brand closes that gap first earns the crown.</p>
+</div>
+
+<footer>
+  <span class="footer-swirl">🍦</span>
+  UX Research Report · Yogurtland vs Menchie's · 2025 · Confidential
+</footer>
+
+<script>
+// Cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+
+// Dimension rows
+const dims = [
+  ["App & Digital Experience", 8.8, 7.0, "yl"],
+  ["In-Store Atmosphere", 7.4, 9.0, "mc"],
+  ["Flavor Variety & Rotation", 9.1, 7.6, "yl"],
+  ["Topping Station UX", 8.3, 8.0, "yl"],
+  ["Loyalty Program Quality", 8.5, 8.2, "yl"],
+  ["Staff Friendliness", 6.8, 9.2, "mc"],
+  ["Value Perception", 7.9, 7.9, "tie"],
+  ["Overall Satisfaction", 8.2, 7.8, "yl"],
+];
+const dr = document.getElementById('dim-rows');
+dims.forEach(([dim, yl, mc, w]) => {
+  const wBadge = w === 'yl'
+    ? '<span class="dim-winner w-yl">Yogurtland</span>'
+    : w === 'mc'
+    ? '<span class="dim-winner w-mc">Menchie\'s</span>'
+    : '<span class="dim-winner w-tie">Tie</span>';
+  dr.innerHTML += `<div class="dim-row">
+    <div class="dim-label">${dim}</div>
+    <div class="bar-track"><div class="bar-fill yl" style="width:${yl/10*100}%"></div></div>
+    <div class="dim-score yl-score">${yl}</div>
+    <div class="bar-track"><div class="bar-fill mc" style="width:${mc/10*100}%"></div></div>
+    <div class="dim-score mc-score">${mc}</div>
+    ${wBadge}
+  </div>`;
+});
+
+// Feature table
+const feats = [
+  ["Locations (US)", "~330 stores", "~540 stores", "mc"],
+  ["Mobile App Quality", "⭐ 4.7 iOS / 4.4 Android", "3.9 iOS / 3.5 Android", "yl"],
+  ["Loyalty Program", "Yogurtland Rewards", "My Smileage™", "tie"],
+  ["Online Ordering", "✓ Full mobile order", "✓ Limited", "yl"],
+  ["Flavor Count (active)", "~100 globally, ~16–20/store", "~100 globally, ~14–18/store", "yl"],
+  ["Topping Count", "~40 toppings avg", "~35 toppings avg", "yl"],
+  ["Self-Serve Model", "✓ Always self-serve", "✓ Self-serve", "tie"],
+  ["Staff Warmth Rating", "6.8 / 10", "9.2 / 10", "mc"],
+  ["Catering / Events", "◐ Basic", "✓ Strong group packages", "mc"],
+  ["Social Media Presence", "Strong (Instagram-first)", "Moderate", "yl"],
+  ["First-Visit Clarity", "7.1 / 10", "8.4 / 10", "mc"],
+  ["Price per oz", "~$0.55–0.70", "~$0.55–0.70", "tie"],
+];
+const fb = document.getElementById('feat-body');
+feats.forEach(([feat, yl, mc, w]) => {
+  const wTag = w === 'yl'
+    ? '<span class="tag tag-yl">Yogurtland</span>'
+    : w === 'mc'
+    ? '<span class="tag tag-mc">Menchie\'s</span>'
+    : '<span class="tag tag-tie">Tie</span>';
+  fb.innerHTML += `<tr><td>${feat}</td><td>${yl}</td><td>${mc}</td><td>${wTag}</td></tr>`;
+});
+
+// Personas
+const personas = [
+  ["📱", "Digital Native (18–28)", "Seamless app, quick order, loyalty points", "yl"],
+  ["👨‍👩‍👧", "Family with Young Kids", "Fun atmosphere, staff help, no stress", "mc"],
+  ["🏃", "Health-Conscious Adult", "Tart yogurt, fruit toppings, calorie info", "yl"],
+  ["👵", "Older Guest (55+)", "Friendly staff, familiar options, simplicity", "mc"],
+  ["🎂", "Birthday / Group Planner", "Catering, group deals, event support", "mc"],
+  ["🌎", "Flavor Explorer", "Novel flavors, rotating specials, variety", "yl"],
+];
+const pg = document.getElementById('persona-grid');
+personas.forEach(([icon, name, need, pref]) => {
+  const prefLabel = pref === 'yl' ? 'Yogurtland' : "Menchie's";
+  const prefClass = pref === 'yl' ? 'pp-yl' : 'pp-mc';
+  pg.innerHTML += `<div class="persona-card fade-in">
+    <span class="p-emoji">${icon}</span>
+    <div class="p-name">${name}</div>
+    <div class="p-need">${need}</div>
+    <span class="p-pref ${prefClass}">${prefLabel}</span>
+  </div>`;
+});
+
+// Scroll observer
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

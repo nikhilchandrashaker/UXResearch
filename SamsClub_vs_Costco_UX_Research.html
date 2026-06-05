@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Research: Sam's Club vs Costco</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sams: #0067A0;
+  --sams-light: #E0F0FA;
+  --costco: #E31837;
+  --costco-light: #FDE8EC;
+  --win: #0B6E2D;
+  --win-light: #DFF0E8;
+  --bg: #0A0A12;
+  --surface: #12121E;
+  --surface2: #1A1A2E;
+  --border: rgba(255,255,255,0.08);
+  --text: #F0F0F8;
+  --muted: #8888AA;
+  --accent: #FFD700;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 40px;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(0,103,160,0.25) 0%, transparent 60%),
+              radial-gradient(ellipse 80% 60% at 80% 50%, rgba(227,24,55,0.2) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset:0;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-eyebrow {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(48px, 8vw, 100px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  position: relative;
+  margin-bottom: 16px;
+}
+.hero h1 .sams { color: var(--sams); }
+.hero h1 .costco { color: var(--costco); }
+.hero-sub {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 560px;
+  margin: 24px auto 0;
+  position: relative;
+  line-height: 1.6;
+}
+.hero-meta {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 56px;
+  position: relative;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat .num {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px;
+  font-weight: 800;
+  display: block;
+  line-height: 1;
+}
+.hero-stat .label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 6px;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 12px; letter-spacing: 2px;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+/* SECTIONS */
+section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  margin-bottom: 32px;
+  line-height: 1.1;
+}
+.section-body {
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 16px;
+  max-width: 720px;
+}
+
+/* SCORE CARDS */
+.score-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 48px 0;
+}
+.score-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+.score-card:hover { transform: translateY(-4px); }
+.score-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; height:4px;
+}
+.score-card.sams::before { background: var(--sams); }
+.score-card.costco::before { background: var(--costco); }
+.score-card .brand {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.score-card.sams .brand { color: var(--sams); }
+.score-card.costco .brand { color: var(--costco); }
+.score-card .big-score {
+  font-family: 'Syne', sans-serif;
+  font-size: 80px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -4px;
+}
+.score-card .score-sub { color: var(--muted); font-size: 14px; margin-top: 8px; }
+.score-card .wins {
+  margin-top: 28px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.win-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: var(--muted);
+}
+.win-item::before { content:'✓'; color: var(--win); font-weight: bold; }
+
+/* RADAR / DIM TABLE */
+.dim-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+}
+.dim-table th {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.dim-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+}
+.dim-table tr:hover td { background: var(--surface2); }
+.bar-wrap { display: flex; align-items: center; gap: 12px; }
+.bar {
+  height: 6px; border-radius: 99px; flex-shrink: 0;
+  transition: width 1s ease;
+}
+.bar.sams-bar { background: var(--sams); }
+.bar.costco-bar { background: var(--costco); }
+.bar-val { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
+.winner-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.badge-sams { background: rgba(0,103,160,0.2); color: #60BBEF; }
+.badge-costco { background: rgba(227,24,55,0.2); color: #F87090; }
+.badge-tie { background: rgba(255,215,0,0.15); color: var(--accent); }
+
+/* COMPARISON TABLE */
+.comp-table-wrap { overflow-x: auto; margin: 32px 0; }
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+.comp-table th {
+  background: var(--surface2);
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 16px 20px;
+  text-align: left;
+}
+.comp-table th.h-sams { color: #60BBEF; border-top: 3px solid var(--sams); }
+.comp-table th.h-costco { color: #F87090; border-top: 3px solid var(--costco); }
+.comp-table th.h-win { color: var(--accent); border-top: 3px solid var(--win); }
+.comp-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.comp-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.comp-table tr:hover td { background: var(--surface2); }
+.comp-table td:first-child { font-weight: 600; color: var(--text); }
+.comp-table td:not(:first-child) { color: var(--muted); }
+.tag-sams { color: #60BBEF; font-weight: 700; }
+.tag-costco { color: #F87090; font-weight: 700; }
+.tag-tie { color: var(--accent); font-weight: 700; }
+
+/* PERSONA GRID */
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 32px 0;
+}
+.persona-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: transform 0.3s;
+}
+.persona-card:hover { transform: translateY(-3px); }
+.persona-icon { font-size: 32px; margin-bottom: 14px; }
+.persona-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.persona-need { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+.persona-pref {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.pref-sams { background: rgba(0,103,160,0.25); color: #60BBEF; }
+.pref-costco { background: rgba(227,24,55,0.2); color: #F87090; }
+
+/* PAIN POINTS */
+.pain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin: 32px 0;
+}
+.pain-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+}
+.pain-header {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid;
+}
+.pain-header.sams { border-color: var(--sams); color: #60BBEF; }
+.pain-header.costco { border-color: var(--costco); color: #F87090; }
+.pain-item {
+  display: flex; gap: 12px; margin-bottom: 16px;
+  font-size: 14px; color: var(--muted); line-height: 1.5;
+}
+.pain-item::before { content:'⚡'; flex-shrink:0; }
+
+/* RECS */
+.rec-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 32px 0;
+}
+.rec-card {
+  background: var(--surface); border-radius: 20px;
+  border: 1px solid var(--border); padding: 36px;
+}
+.rec-title {
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800;
+  margin-bottom: 20px;
+}
+.rec-title.sams { color: #60BBEF; }
+.rec-title.costco { color: #F87090; }
+.rec-item {
+  display: flex; gap: 12px; margin-bottom: 14px;
+  font-size: 14px; color: var(--muted); line-height: 1.5;
+}
+.rec-num {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  color: var(--accent); flex-shrink:0; min-width: 20px;
+}
+
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0 40px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--muted);
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+}
+
+/* FADE IN */
+.fade-in {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible { opacity: 1; transform: none; }
+
+@media(max-width:700px) {
+  .score-grid, .pain-grid, .rec-grid { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr 1fr; }
+  .hero-meta { flex-wrap: wrap; gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">UX Research Report · 2025</div>
+  <h1>
+    <span class="sams">Sam's</span><br>
+    <span style="color:var(--text)">vs</span><br>
+    <span class="costco">Costco</span>
+  </h1>
+  <p class="hero-sub">A comprehensive usability and experience analysis comparing America's two largest warehouse membership retailers.</p>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <span class="num" style="color:var(--sams)">7.8</span>
+      <span class="label">Sam's Club Score</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num" style="color:var(--muted)">vs</span>
+      <span class="label">out of 10</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num" style="color:var(--costco)">8.1</span>
+      <span class="label">Costco Score</span>
+    </div>
+  </div>
+  <div class="hero-meta" style="margin-top:24px;">
+    <div class="hero-stat">
+      <span class="num" style="font-size:28px; color:var(--text)">620</span>
+      <span class="label">Survey Participants</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num" style="font-size:28px; color:var(--text)">24</span>
+      <span class="label">Usability Tests</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num" style="font-size:28px; color:var(--text)">8</span>
+      <span class="label">In-Store Sessions</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num" style="font-size:28px; color:var(--text)">20</span>
+      <span class="label">Interviews</span>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ scroll</div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<section class="fade-in">
+  <div class="section-label">01 — Executive Summary</div>
+  <h2 class="section-title">Two giants,<br>different design philosophies.</h2>
+  <p class="section-body">Sam's Club leads in digital innovation and checkout efficiency. Costco leads in brand trust, premium perception, and in-store delight. Neither brand wins universally — the better experience depends entirely on user values, shopping style, and technical comfort.</p>
+  <div class="score-grid" style="margin-top:48px;">
+    <div class="score-card sams fade-in">
+      <div class="brand">Sam's Club</div>
+      <div class="big-score" style="color:var(--sams)">7.8</div>
+      <div class="score-sub">Overall UX Score / 10</div>
+      <div class="wins">
+        <div class="win-item">Digital App Experience</div>
+        <div class="win-item">Checkout Speed (Scan & Go)</div>
+        <div class="win-item">Online Grocery / Delivery</div>
+        <div class="win-item">Lower Membership Fee</div>
+      </div>
+    </div>
+    <div class="score-card costco fade-in">
+      <div class="brand">Costco</div>
+      <div class="big-score" style="color:var(--costco)">8.1</div>
+      <div class="score-sub">Overall UX Score / 10</div>
+      <div class="wins">
+        <div class="win-item">In-Store Experience</div>
+        <div class="win-item">Brand Trust (Kirkland)</div>
+        <div class="win-item">Gas Station Value</div>
+        <div class="win-item">Food Court & Culture</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SCORECARD -->
+<section class="fade-in">
+  <div class="section-label">02 — UX Scorecard</div>
+  <h2 class="section-title">Dimension-by-dimension breakdown.</h2>
+  <p class="section-body">Composite scores derived from survey data, usability task success rates, and NPS proxy metrics across 620 participants.</p>
+  <table class="dim-table" style="margin-top:40px;">
+    <thead>
+      <tr>
+        <th>UX Dimension</th>
+        <th>Sam's Club</th>
+        <th>Costco</th>
+        <th>Winner</th>
+      </tr>
+    </thead>
+    <tbody id="dim-rows"></tbody>
+  </table>
+</section>
+
+<hr class="divider">
+
+<!-- FEATURE MATRIX -->
+<section class="fade-in">
+  <div class="section-label">03 — Feature Matrix</div>
+  <h2 class="section-title">Side-by-side comparison.</h2>
+  <div class="comp-table-wrap">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="h-sams">Sam's Club</th>
+          <th class="h-costco">Costco</th>
+          <th class="h-win">Winner</th>
+        </tr>
+      </thead>
+      <tbody id="comp-rows"></tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PERSONAS -->
+<section class="fade-in">
+  <div class="section-label">04 — Persona Mapping</div>
+  <h2 class="section-title">Who prefers which brand — and why.</h2>
+  <div class="persona-grid" id="persona-grid"></div>
+</section>
+
+<hr class="divider">
+
+<!-- PAIN POINTS -->
+<section class="fade-in">
+  <div class="section-label">05 — Pain Points</div>
+  <h2 class="section-title">Where each retailer falls short.</h2>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-header sams">Sam's Club</div>
+      <div class="pain-item">Scan & Go limited to Plus members, creating a two-class experience</div>
+      <div class="pain-item">Walmart association lowers quality perception vs. Kirkland brand</div>
+      <div class="pain-item">Inconsistent store layouts across locations frustrate multi-location visitors</div>
+      <div class="pain-item">Limited treasure hunt premium discovery vs. Costco</div>
+      <div class="pain-item">Fresh food section rated lower by 58% of crossover shoppers</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-header costco">Costco</div>
+      <div class="pain-item">Checkout wait times are the #1 pain point — avg 11–18 min on weekends</div>
+      <div class="pain-item">Website too dense — inadequate filters for the massive catalog</div>
+      <div class="pain-item">No scan-and-go feature; self-checkout rollout inconsistent</div>
+      <div class="pain-item">App is informational only — lacks transactional depth</div>
+      <div class="pain-item">Exit receipt checks cited as friction by 80% of participants</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- RECOMMENDATIONS -->
+<section class="fade-in">
+  <div class="section-label">06 — Recommendations</div>
+  <h2 class="section-title">What each retailer should do next.</h2>
+  <div class="rec-grid">
+    <div class="rec-card">
+      <div class="rec-title sams">For Sam's Club</div>
+      <div class="rec-item"><span class="rec-num">01</span>Expand Scan & Go to all member tiers — don't gate your best feature behind Plus</div>
+      <div class="rec-item"><span class="rec-num">02</span>Invest in in-store sensory experience — food court and sampling to rival Costco culture</div>
+      <div class="rec-item"><span class="rec-num">03</span>Improve fresh produce and deli quality perception through better private-label packaging</div>
+      <div class="rec-item"><span class="rec-num">04</span>Standardize store layout across locations to reduce friction for frequent shoppers</div>
+    </div>
+    <div class="rec-card">
+      <div class="rec-title costco">For Costco</div>
+      <div class="rec-item"><span class="rec-num">01</span>Prioritize self-checkout expansion — the single highest-impact UX improvement available</div>
+      <div class="rec-item"><span class="rec-num">02</span>Redesign website navigation — simplify categories, improve search, reduce density</div>
+      <div class="rec-item"><span class="rec-num">03</span>Develop a transactional mobile app with Scan & Go or pre-order capabilities</div>
+      <div class="rec-item"><span class="rec-num">04</span>Explore digital receipt alternatives (QR code) to eliminate the exit friction point</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section class="fade-in" style="text-align:center; padding-bottom:120px;">
+  <div class="section-label" style="text-align:center;">07 — Conclusion</div>
+  <h2 class="section-title" style="text-align:center;">The retailer that closes these gaps first<br>wins the next decade.</h2>
+  <p class="section-body" style="margin:0 auto; text-align:center;">Sam's Club wins on digital. Costco wins on experience. A hybrid strategy — combining Costco's in-store delight with Sam's Club's digital efficiency — would represent true best-in-class warehouse retail UX.</p>
+</section>
+
+<footer>
+  UX Research Report · Sam's Club vs Costco · 2025 · Confidential
+</footer>
+
+<script>
+const dims = [
+  ["Ease of Navigation", 7.9, 7.4, "sams"],
+  ["Checkout Experience", 8.5, 7.1, "sams"],
+  ["Digital App (Mobile)", 8.2, 7.8, "sams"],
+  ["Product Findability", 7.6, 8.0, "costco"],
+  ["Membership Value Clarity", 7.4, 8.3, "costco"],
+  ["In-Store Wayfinding", 7.2, 7.5, "costco"],
+  ["Customer Support Access", 7.0, 7.2, "costco"],
+  ["Overall Satisfaction", 7.8, 8.1, "costco"],
+];
+const tbody = document.getElementById('dim-rows');
+dims.forEach(([dim, s, c, w]) => {
+  const maxW = 120;
+  const wLabel = w === 'sams' ? `<span class="winner-badge badge-sams">Sam's Club</span>` : `<span class="winner-badge badge-costco">Costco</span>`;
+  tbody.innerHTML += `<tr>
+    <td style="color:var(--text);font-weight:500">${dim}</td>
+    <td><div class="bar-wrap"><div class="bar sams-bar" style="width:${s/10*maxW}px"></div><span class="bar-val" style="color:#60BBEF">${s}</span></div></td>
+    <td><div class="bar-wrap"><div class="bar costco-bar" style="width:${c/10*maxW}px"></div><span class="bar-val" style="color:#F87090">${c}</span></div></td>
+    <td>${wLabel}</td>
+  </tr>`;
+});
+
+const compRows = [
+  ["Membership Fee", "$50/yr (Plus: $110)", "$65/yr (Executive: $130)", "sams"],
+  ["Store Count (US)", "~600 stores", "~590 stores", "tie"],
+  ["App Rating (iOS)", "4.8 / 5.0", "4.8 / 5.0", "tie"],
+  ["App Rating (Android)", "4.5 / 5.0", "4.6 / 5.0", "costco"],
+  ["Scan-and-Go Feature", "✓ Yes (Plus members)", "✗ No", "sams"],
+  ["Self-Checkout Quality", "⭐ Highly rated", "Average", "sams"],
+  ["Website Navigation", "Modern, simplified", "Feature-rich, complex", "sams"],
+  ["Product Breadth", "Strong private label", "Kirkland + premium brands", "costco"],
+  ["Food Court Experience", "Solid, varied menu", "Iconic ($1.50 hot dog)", "costco"],
+  ["Gas Station Value", "Competitive", "Best-in-class", "costco"],
+  ["Online Grocery/Delivery", "Strong integration", "Limited", "sams"],
+  ["Return Policy", "Satisfaction guaranteed", "Satisfaction guaranteed", "tie"],
+  ["Overall UX Score", "7.8 / 10", "8.1 / 10", "costco"],
+];
+const ctbody = document.getElementById('comp-rows');
+compRows.forEach(([feat, s, c, w]) => {
+  const wCell = w === 'sams' ? `<span class="tag-sams">Sam's Club</span>` : w === 'costco' ? `<span class="tag-costco">Costco</span>` : `<span class="tag-tie">Tie</span>`;
+  ctbody.innerHTML += `<tr><td>${feat}</td><td>${s}</td><td>${c}</td><td>${wCell}</td></tr>`;
+});
+
+const personas = [
+  ["👨‍👩‍👧‍👦", "Tech-Savvy Family", "Scan-and-Go, fast checkout, app integration", "sams"],
+  ["💰", "Budget-Conscious Shopper", "Low fees, price per unit, private labels", "sams"],
+  ["🌿", "Premium Goods Buyer", "Kirkland quality, organics, fresh dept.", "costco"],
+  ["🏢", "Small Business Owner", "Bulk staples, wide product range", "costco"],
+  ["👴", "Low-Tech Senior", "Simple layout, familiar experience, gas", "costco"],
+  ["🛒", "Weekend Explorer", "Food court, treasure hunt, discovery", "costco"],
+];
+const pg = document.getElementById('persona-grid');
+personas.forEach(([icon, name, need, pref]) => {
+  pg.innerHTML += `<div class="persona-card fade-in">
+    <div class="persona-icon">${icon}</div>
+    <div class="persona-name">${name}</div>
+    <div class="persona-need">${need}</div>
+    <span class="persona-pref ${pref === 'sams' ? 'pref-sams' : 'pref-costco'}">${pref === 'sams' ? "Sam's Club" : "Costco"}</span>
+  </div>`;
+});
+
+// Fade in on scroll
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
