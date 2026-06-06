@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee Chain UX Research — Comparative Study 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --cream: #f5f0e8;
+    --warm-white: #fdfaf4;
+    --starbucks: #00704a;
+    --dutch: #f47521;
+    --peets: #6b3a2a;
+    --cbtl: #8b1a1a;
+    --gold: #c8a96e;
+    --rule: #d4c5a9;
+    --muted: #7a6e5f;
+    --paper: #f9f5ed;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    border-bottom: 3px double var(--ink);
+    padding: 48px 60px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .masthead-left {
+    max-width: 600px;
+  }
+
+  .masthead-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .masthead-meta {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* INTRO STRIP */
+  .intro-strip {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 20px 60px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    animation: fadeDown 0.8s 0.1s ease both;
+  }
+
+  .intro-strip p {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    max-width: 700px;
+    opacity: 0.85;
+  }
+
+  .brand-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .pill-starbucks { background: var(--starbucks); color: white; }
+  .pill-dutch { background: var(--dutch); color: white; }
+  .pill-peets { background: var(--peets); color: white; }
+  .pill-cbtl { background: var(--cbtl); color: white; }
+
+  /* LAYOUT GRID */
+  .main-content {
+    padding: 0 60px 80px;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 0 20px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--rule);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .section-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  /* BRAND PROFILE CARDS */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .brand-card {
+    background: var(--warm-white);
+    padding: 28px 24px;
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .brand-card:hover {
+    z-index: 2;
+    box-shadow: 0 8px 32px rgba(26,18,9,0.12);
+    transform: translateY(-3px);
+  }
+
+  .brand-swatch {
+    width: 100%;
+    height: 6px;
+    border-radius: 1px;
+    margin-bottom: 16px;
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .brand-tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .brand-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .brand-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .brand-stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  /* COMPARISON TABLE */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .comparison-table thead tr {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .comparison-table thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .comparison-table thead th:first-child {
+    width: 200px;
+  }
+
+  .comparison-table tbody tr {
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.15s;
+  }
+
+  .comparison-table tbody tr:hover {
+    background: rgba(200, 169, 110, 0.08);
+  }
+
+  .comparison-table tbody tr:nth-child(even) {
+    background: rgba(245, 240, 232, 0.5);
+  }
+
+  .comparison-table tbody tr:nth-child(even):hover {
+    background: rgba(200, 169, 110, 0.12);
+  }
+
+  .comparison-table td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .comparison-table td:first-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .tag-green { background: #d4ede5; color: #00704a; }
+  .tag-orange { background: #fde8d4; color: #c45a10; }
+  .tag-red-dk { background: #e8d4d4; color: #6b3a2a; }
+  .tag-red { background: #f0d4d4; color: #8b1a1a; }
+
+  /* RATING BARS */
+  .rating-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .rating-card {
+    background: var(--warm-white);
+    border: 1px solid var(--rule);
+    padding: 28px;
+  }
+
+  .rating-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rating-card-title .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .rating-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .rating-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    width: 130px;
+    flex-shrink: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .rating-track {
+    flex: 1;
+    height: 6px;
+    background: var(--rule);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .rating-fill {
+    height: 100%;
+    border-radius: 1px;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .rating-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    width: 30px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* UX HEURISTICS */
+  .heuristics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .heuristic-cell {
+    background: var(--warm-white);
+    padding: 20px 18px;
+  }
+
+  .heuristic-metric {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .heuristic-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .heuristic-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* JOURNEY MAP */
+  .journey-map {
+    border: 1px solid var(--rule);
+    background: var(--warm-white);
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .journey-header {
+    background: var(--ink);
+    color: var(--cream);
+    display: grid;
+    grid-template-columns: 140px repeat(5, 1fr);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .journey-header div {
+    padding: 12px 14px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .journey-row {
+    display: grid;
+    grid-template-columns: 140px repeat(5, 1fr);
+    border-bottom: 1px solid var(--rule);
+    transition: background 0.15s;
+  }
+
+  .journey-row:hover { background: rgba(200, 169, 110, 0.06); }
+
+  .journey-row:last-child { border-bottom: none; }
+
+  .journey-brand {
+    padding: 16px 14px;
+    border-right: 1px solid var(--rule);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .journey-cell {
+    padding: 14px;
+    border-right: 1px solid var(--rule);
+    font-family: 'Libre Baskerville', serif;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .journey-cell:last-child { border-right: none; }
+
+  .sentiment {
+    display: inline-block;
+    font-size: 13px;
+    margin-right: 4px;
+  }
+
+  /* PAIN POINTS */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .pain-card {
+    border: 1px solid var(--rule);
+    background: var(--warm-white);
+    padding: 24px;
+  }
+
+  .pain-brand-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pain-brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .pain-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .pain-icon {
+    flex-shrink: 0;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .pain-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .pain-severity {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 2px;
+    letter-spacing: 0.06em;
+  }
+
+  /* RECOMMENDATIONS */
+  .reco-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .reco-cell {
+    background: var(--warm-white);
+    padding: 24px 20px;
+  }
+
+  .reco-priority {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .priority-high { color: #b83232; }
+  .priority-med { color: #c8860a; }
+  .priority-low { color: #2d7a5a; }
+
+  .reco-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .reco-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .reco-brands {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* METHODOLOGY */
+  .method-bar {
+    display: flex;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .method-item {
+    background: var(--warm-white);
+    padding: 18px 22px;
+    flex: 1;
+  }
+
+  .method-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .method-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .method-desc {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 11.5px;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 8px 0 0;
+    opacity: 0.5;
+  }
+
+  .divider-line { flex: 1; height: 1px; background: var(--rule); }
+  .divider-mark {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+
+  /* FOOTER */
+  .footer {
+    border-top: 3px double var(--ink);
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-bars .rating-fill {
+    animation: growWidth 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes growWidth {
+    from { width: 0 !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-left">
+    <div class="masthead-eyebrow">UX Research Report · Comparative Analysis</div>
+    <h1>The Coffee Chain<br><em>Experience Study</em></h1>
+  </div>
+  <div class="masthead-meta">
+    Report No. UX-2025-04<br>
+    Participants: 148<br>
+    Duration: 6 weeks<br>
+    Method: Mixed-methods<br>
+    Scope: United States
+  </div>
+</header>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <p>A comparative UX study examining ordering flows, app experiences, in-store environments, and loyalty program friction across four major U.S. coffee chains. Research included usability testing, contextual inquiry, NPS surveys, and heuristic evaluation.</p>
+  <div class="brand-pills">
+    <span class="pill pill-starbucks">Starbucks</span>
+    <span class="pill pill-dutch">Dutch Bros</span>
+    <span class="pill pill-peets">Peet's Coffee</span>
+    <span class="pill pill-cbtl">Coffee Bean</span>
+  </div>
+</div>
+
+<div class="main-content">
+
+  <!-- SECTION 1: METHODOLOGY -->
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div>
+      <div class="section-title">Methodology & Scope</div>
+      <div class="section-desc">Research design, participant breakdown, and data collection methods</div>
+    </div>
+  </div>
+
+  <div class="method-bar">
+    <div class="method-item">
+      <div class="method-num">148</div>
+      <div class="method-label">Participants</div>
+      <div class="method-desc">Ages 18–64, regular coffee purchasers</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">24</div>
+      <div class="method-label">Usability Sessions</div>
+      <div class="method-desc">6 per brand, moderated think-aloud</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">94</div>
+      <div class="method-label">Field Observations</div>
+      <div class="method-desc">In-store contextual inquiry visits</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">30</div>
+      <div class="method-label">In-depth Interviews</div>
+      <div class="method-desc">45-min semi-structured sessions</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">4</div>
+      <div class="method-label">Heuristic Audits</div>
+      <div class="method-desc">Nielsen's 10 + brand-specific criteria</div>
+    </div>
+    <div class="method-item">
+      <div class="method-num">6</div>
+      <div class="method-label">Weeks Research</div>
+      <div class="method-desc">Jan–Feb 2025, multi-city fieldwork</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: BRAND PROFILES -->
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div>
+      <div class="section-title">Brand Profiles</div>
+      <div class="section-desc">Overview of each chain's footprint, positioning, and digital maturity</div>
+    </div>
+  </div>
+
+  <div class="brand-grid">
+    <div class="brand-card">
+      <div class="brand-swatch" style="background: var(--starbucks);"></div>
+      <div class="brand-name">Starbucks</div>
+      <div class="brand-tagline">Scale & Ecosystem Leader</div>
+      <div class="brand-stat"><span class="brand-stat-label">U.S. Locations</span><span class="brand-stat-value">16,600+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">App Downloads</span><span class="brand-stat-value">31M+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Loyalty Members</span><span class="brand-stat-value">34M</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Founded</span><span class="brand-stat-value">1971, Seattle</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Avg. Wait Time</span><span class="brand-stat-value">4.2 min</span></div>
+    </div>
+    <div class="brand-card">
+      <div class="brand-swatch" style="background: var(--dutch);"></div>
+      <div class="brand-name">Dutch Bros</div>
+      <div class="brand-tagline">Drive-Thru & Energy Cult</div>
+      <div class="brand-stat"><span class="brand-stat-label">U.S. Locations</span><span class="brand-stat-value">950+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">App Downloads</span><span class="brand-stat-value">5M+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Loyalty Members</span><span class="brand-stat-value">6.5M</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Founded</span><span class="brand-stat-value">1992, Oregon</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Avg. Wait Time</span><span class="brand-stat-value">5.8 min</span></div>
+    </div>
+    <div class="brand-card">
+      <div class="brand-swatch" style="background: var(--peets);"></div>
+      <div class="brand-name">Peet's Coffee</div>
+      <div class="brand-tagline">Craft Heritage, Digital Lag</div>
+      <div class="brand-stat"><span class="brand-stat-label">U.S. Locations</span><span class="brand-stat-value">350+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">App Downloads</span><span class="brand-stat-value">2M+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Loyalty Members</span><span class="brand-stat-value">3.2M</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Founded</span><span class="brand-stat-value">1966, Berkeley</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Avg. Wait Time</span><span class="brand-stat-value">3.1 min</span></div>
+    </div>
+    <div class="brand-card">
+      <div class="brand-swatch" style="background: var(--cbtl);"></div>
+      <div class="brand-name">Coffee Bean & Tea Leaf</div>
+      <div class="brand-tagline">Premium Niche, Declining UX</div>
+      <div class="brand-stat"><span class="brand-stat-label">U.S. Locations</span><span class="brand-stat-value">120+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">App Downloads</span><span class="brand-stat-value">0.8M+</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Loyalty Members</span><span class="brand-stat-value">1.1M</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Founded</span><span class="brand-stat-value">1963, Los Angeles</span></div>
+      <div class="brand-stat"><span class="brand-stat-label">Avg. Wait Time</span><span class="brand-stat-value">3.7 min</span></div>
+    </div>
+  </div>
+
+  <div style="height:16px;"></div>
+
+  <!-- SECTION 3: HEURISTIC EVALUATION -->
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div>
+      <div class="section-title">Heuristic Evaluation</div>
+      <div class="section-desc">Nielsen's 10 usability heuristics applied to mobile apps and in-store ordering flows</div>
+    </div>
+  </div>
+
+  <div class="rating-section animate-bars" id="ratings">
+    <div class="rating-card">
+      <div class="rating-card-title">
+        <span class="dot" style="background:var(--starbucks)"></span> Starbucks
+      </div>
+      <div class="rating-row"><span class="rating-label">Visibility of Status</span><div class="rating-track"><div class="rating-fill" style="width:90%; background:var(--starbucks)"></div></div><span class="rating-num">9.0</span></div>
+      <div class="rating-row"><span class="rating-label">User Control</span><div class="rating-track"><div class="rating-fill" style="width:85%; background:var(--starbucks)"></div></div><span class="rating-num">8.5</span></div>
+      <div class="rating-row"><span class="rating-label">Consistency</span><div class="rating-track"><div class="rating-fill" style="width:88%; background:var(--starbucks)"></div></div><span class="rating-num">8.8</span></div>
+      <div class="rating-row"><span class="rating-label">Error Prevention</span><div class="rating-track"><div class="rating-fill" style="width:78%; background:var(--starbucks)"></div></div><span class="rating-num">7.8</span></div>
+      <div class="rating-row"><span class="rating-label">Recognition vs Recall</span><div class="rating-track"><div class="rating-fill" style="width:92%; background:var(--starbucks)"></div></div><span class="rating-num">9.2</span></div>
+      <div class="rating-row"><span class="rating-label">Aesthetic Design</span><div class="rating-track"><div class="rating-fill" style="width:87%; background:var(--starbucks)"></div></div><span class="rating-num">8.7</span></div>
+    </div>
+    <div class="rating-card">
+      <div class="rating-card-title">
+        <span class="dot" style="background:var(--dutch)"></span> Dutch Bros
+      </div>
+      <div class="rating-row"><span class="rating-label">Visibility of Status</span><div class="rating-track"><div class="rating-fill" style="width:60%; background:var(--dutch)"></div></div><span class="rating-num">6.0</span></div>
+      <div class="rating-row"><span class="rating-label">User Control</span><div class="rating-track"><div class="rating-fill" style="width:55%; background:var(--dutch)"></div></div><span class="rating-num">5.5</span></div>
+      <div class="rating-row"><span class="rating-label">Consistency</span><div class="rating-track"><div class="rating-fill" style="width:70%; background:var(--dutch)"></div></div><span class="rating-num">7.0</span></div>
+      <div class="rating-row"><span class="rating-label">Error Prevention</span><div class="rating-track"><div class="rating-fill" style="width:50%; background:var(--dutch)"></div></div><span class="rating-num">5.0</span></div>
+      <div class="rating-row"><span class="rating-label">Recognition vs Recall</span><div class="rating-track"><div class="rating-fill" style="width:65%; background:var(--dutch)"></div></div><span class="rating-num">6.5</span></div>
+      <div class="rating-row"><span class="rating-label">Aesthetic Design</span><div class="rating-track"><div class="rating-fill" style="width:82%; background:var(--dutch)"></div></div><span class="rating-num">8.2</span></div>
+    </div>
+    <div class="rating-card">
+      <div class="rating-card-title">
+        <span class="dot" style="background:var(--peets)"></span> Peet's Coffee
+      </div>
+      <div class="rating-row"><span class="rating-label">Visibility of Status</span><div class="rating-track"><div class="rating-fill" style="width:72%; background:var(--peets)"></div></div><span class="rating-num">7.2</span></div>
+      <div class="rating-row"><span class="rating-label">User Control</span><div class="rating-track"><div class="rating-fill" style="width:68%; background:var(--peets)"></div></div><span class="rating-num">6.8</span></div>
+      <div class="rating-row"><span class="rating-label">Consistency</span><div class="rating-track"><div class="rating-fill" style="width:74%; background:var(--peets)"></div></div><span class="rating-num">7.4</span></div>
+      <div class="rating-row"><span class="rating-label">Error Prevention</span><div class="rating-track"><div class="rating-fill" style="width:66%; background:var(--peets)"></div></div><span class="rating-num">6.6</span></div>
+      <div class="rating-row"><span class="rating-label">Recognition vs Recall</span><div class="rating-track"><div class="rating-fill" style="width:76%; background:var(--peets)"></div></div><span class="rating-num">7.6</span></div>
+      <div class="rating-row"><span class="rating-label">Aesthetic Design</span><div class="rating-track"><div class="rating-fill" style="width:71%; background:var(--peets)"></div></div><span class="rating-num">7.1</span></div>
+    </div>
+    <div class="rating-card">
+      <div class="rating-card-title">
+        <span class="dot" style="background:var(--cbtl)"></span> Coffee Bean & Tea Leaf
+      </div>
+      <div class="rating-row"><span class="rating-label">Visibility of Status</span><div class="rating-track"><div class="rating-fill" style="width:58%; background:var(--cbtl)"></div></div><span class="rating-num">5.8</span></div>
+      <div class="rating-row"><span class="rating-label">User Control</span><div class="rating-track"><div class="rating-fill" style="width:52%; background:var(--cbtl)"></div></div><span class="rating-num">5.2</span></div>
+      <div class="rating-row"><span class="rating-label">Consistency</span><div class="rating-track"><div class="rating-fill" style="width:55%; background:var(--cbtl)"></div></div><span class="rating-num">5.5</span></div>
+      <div class="rating-row"><span class="rating-label">Error Prevention</span><div class="rating-track"><div class="rating-fill" style="width:48%; background:var(--cbtl)"></div></div><span class="rating-num">4.8</span></div>
+      <div class="rating-row"><span class="rating-label">Recognition vs Recall</span><div class="rating-track"><div class="rating-fill" style="width:60%; background:var(--cbtl)"></div></div><span class="rating-num">6.0</span></div>
+      <div class="rating-row"><span class="rating-label">Aesthetic Design</span><div class="rating-track"><div class="rating-fill" style="width:63%; background:var(--cbtl)"></div></div><span class="rating-num">6.3</span></div>
+    </div>
+  </div>
+
+  <div style="height:8px;"></div>
+
+  <!-- SECTION 4: FEATURE COMPARISON -->
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div>
+      <div class="section-title">Feature Comparison Matrix</div>
+      <div class="section-desc">Digital and in-store capabilities across all four chains</div>
+    </div>
+  </div>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>Feature / Capability</th>
+        <th>Starbucks</th>
+        <th>Dutch Bros</th>
+        <th>Peet's Coffee</th>
+        <th>Coffee Bean</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mobile Ordering</td>
+        <td><span class="tag tag-green">Full</span> iOS & Android</td>
+        <td><span class="tag tag-orange">Limited</span> App only</td>
+        <td><span class="tag tag-green">Full</span> iOS & Android</td>
+        <td><span class="tag tag-red">Basic</span> Unstable</td>
+      </tr>
+      <tr>
+        <td>Order Ahead / Skip Line</td>
+        <td><span class="tag tag-green">Yes</span> Dedicated pickup</td>
+        <td><span class="tag tag-orange">Partial</span> Drive-thru only</td>
+        <td><span class="tag tag-green">Yes</span> In-store pickup</td>
+        <td><span class="tag tag-red">No</span> In-development</td>
+      </tr>
+      <tr>
+        <td>Loyalty Program</td>
+        <td><span class="tag tag-green">Stars</span> Tier-based rewards</td>
+        <td><span class="tag tag-green">Stamp</span> Punch card digital</td>
+        <td><span class="tag tag-orange">Points</span> Limited redemption</td>
+        <td><span class="tag tag-red-dk">CBTL Rewards</span> Confusing tiers</td>
+      </tr>
+      <tr>
+        <td>Customization Depth</td>
+        <td>20+ modifiers per drink</td>
+        <td>15+ modifiers, syrups</td>
+        <td>12 modifiers, limited</td>
+        <td>8 modifiers, restricted</td>
+      </tr>
+      <tr>
+        <td>Saved Orders / Favorites</td>
+        <td><span class="tag tag-green">Yes</span> Named saves</td>
+        <td><span class="tag tag-green">Yes</span> Recents only</td>
+        <td><span class="tag tag-orange">Partial</span> Last order only</td>
+        <td><span class="tag tag-red">No</span> Not available</td>
+      </tr>
+      <tr>
+        <td>Real-time Order Tracking</td>
+        <td><span class="tag tag-green">Yes</span> Animated status</td>
+        <td><span class="tag tag-red">No</span> Estimated time only</td>
+        <td><span class="tag tag-orange">Partial</span> Ready notification</td>
+        <td><span class="tag tag-red">No</span> None</td>
+      </tr>
+      <tr>
+        <td>Payment Methods</td>
+        <td>Wallet, card, gift card, Apple/Google Pay</td>
+        <td>Card, Apple Pay, gift card</td>
+        <td>Card, Apple Pay</td>
+        <td>Card only in app</td>
+      </tr>
+      <tr>
+        <td>Nutritional Info</td>
+        <td><span class="tag tag-green">Detailed</span> Per customization</td>
+        <td><span class="tag tag-orange">Basic</span> Core items only</td>
+        <td><span class="tag tag-green">Good</span> Most items</td>
+        <td><span class="tag tag-orange">Partial</span> Outdated data</td>
+      </tr>
+      <tr>
+        <td>Store Locator / Hours</td>
+        <td><span class="tag tag-green">Excellent</span> Live hours</td>
+        <td><span class="tag tag-green">Good</span> Maps integrated</td>
+        <td><span class="tag tag-orange">Basic</span> Map only</td>
+        <td><span class="tag tag-red">Poor</span> Often inaccurate</td>
+      </tr>
+      <tr>
+        <td>In-store Ambient Design</td>
+        <td>Consistent, warm, busy</td>
+        <td>High energy, branded, fun</td>
+        <td>Quiet, intellectual, warm</td>
+        <td>Dated, premium feel fading</td>
+      </tr>
+      <tr>
+        <td>Staff-to-Customer Interaction</td>
+        <td>Scripted but efficient</td>
+        <td>Highly personable, core UX</td>
+        <td>Knowledgeable, slower</td>
+        <td>Inconsistent, undertrained</td>
+      </tr>
+      <tr>
+        <td>Accessibility (App)</td>
+        <td><span class="tag tag-green">WCAG AA</span> Screen reader OK</td>
+        <td><span class="tag tag-orange">Partial</span> Some issues</td>
+        <td><span class="tag tag-orange">Partial</span> Some issues</td>
+        <td><span class="tag tag-red">Poor</span> Not compliant</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="height:8px;"></div>
+
+  <!-- SECTION 5: CUSTOMER JOURNEY MAP -->
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div>
+      <div class="section-title">Customer Journey Map</div>
+      <div class="section-desc">Five-stage ordering journey — awareness through post-purchase — across all brands</div>
+    </div>
+  </div>
+
+  <div class="journey-map">
+    <div class="journey-header">
+      <div>Brand</div>
+      <div>Awareness</div>
+      <div>Pre-Order</div>
+      <div>Ordering</div>
+      <div>Wait & Receive</div>
+      <div>Post-Purchase</div>
+    </div>
+    <div class="journey-row">
+      <div class="journey-brand"><span class="brand-dot" style="background:var(--starbucks)"></span>Starbucks</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>App push notifications feel spammy; seasonal FOMO effective</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Favorites & reorder make pre-order frictionless for regulars</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>Complex customization causes decision fatigue; new items hard to find</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Live tracker reduces anxiety; pickup shelf clearly labeled</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Stars accumulation visible immediately; receipt push prompt</div>
+    </div>
+    <div class="journey-row">
+      <div class="journey-brand"><span class="brand-dot" style="background:var(--dutch)"></span>Dutch Bros</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Social-first brand; TikTok & word-of-mouth drive awareness strongly</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>Menu discovery difficult online; "secret menu" creates stress</div>
+      <div class="journey-cell"><span class="sentiment">😍</span>Employee interaction is the UX — highly personal, memorable</div>
+      <div class="journey-cell"><span class="sentiment">😤</span>Drive-thru queue unpredictable; 8+ min waits common</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Strong emotional attachment post-visit; punch stamp feels rewarding</div>
+    </div>
+    <div class="journey-row">
+      <div class="journey-brand"><span class="brand-dot" style="background:var(--peets)"></span>Peet's Coffee</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>Limited digital presence; word-of-mouth and location proximity</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Menu clear and not overwhelming; coffee descriptions educational</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>In-store counter ordering feels premium and unhurried</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Fastest in-store wait; baristas communicate clearly</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>Loyalty points redemption confusing; app notification lacking</div>
+    </div>
+    <div class="journey-row">
+      <div class="journey-brand"><span class="brand-dot" style="background:var(--cbtl)"></span>Coffee Bean</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>Low digital presence; nostalgia drives returning customers mainly</div>
+      <div class="journey-cell"><span class="sentiment">😤</span>App unreliable; many users resort to walk-in only</div>
+      <div class="journey-cell"><span class="sentiment">😐</span>Counter ordering fine; limited customization options disappoint</div>
+      <div class="journey-cell"><span class="sentiment">😊</span>Wait times short; staff pleasant but inconsistently trained</div>
+      <div class="journey-cell"><span class="sentiment">😤</span>No order history; rewards balance difficult to check; app crashes</div>
+    </div>
+  </div>
+
+  <div style="height:8px;"></div>
+
+  <!-- SECTION 6: PAIN POINTS -->
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div>
+      <div class="section-title">Key Pain Points</div>
+      <div class="section-desc">Top friction areas surfaced through usability sessions and user interviews</div>
+    </div>
+  </div>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-brand-header">
+        <span class="brand-dot" style="background:var(--starbucks)"></span>
+        <span class="pain-brand-name">Starbucks</span>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Menu overcrowding: 400+ items causes decision paralysis. New users spend avg. 3.4 min on menu before ordering.</div>
+          <div class="pain-severity">SEVERITY · HIGH · 78% of new users affected</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Order modification cascade: changing one customization resets others unexpectedly, causing frustration and re-entry.</div>
+          <div class="pain-severity">SEVERITY · MEDIUM · 54% of power users affected</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Reward redemption buried under 3 taps; 22% of users didn't know they had rewards available.</div>
+          <div class="pain-severity">SEVERITY · MEDIUM · Loyalty drop-off risk</div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-brand-header">
+        <span class="brand-dot" style="background:var(--dutch)"></span>
+        <span class="pain-brand-name">Dutch Bros</span>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">No mobile pre-order for walk-in locations. Drive-thru queue times exceed 8 min during peak hours with no visibility.</div>
+          <div class="pain-severity">SEVERITY · HIGH · Primary churn driver</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Secret/unofficial menu creates anxiety for new customers who feel pressure to know items that aren't listed.</div>
+          <div class="pain-severity">SEVERITY · MEDIUM · Barrier to new user acquisition</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">App inconsistency between iOS and Android; Android users report 40% more friction completing rewards check-in.</div>
+          <div class="pain-severity">SEVERITY · MEDIUM · Platform parity issue</div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-brand-header">
+        <span class="brand-dot" style="background:var(--peets)"></span>
+        <span class="pain-brand-name">Peet's Coffee</span>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Points-to-reward conversion opaque; 61% of loyalty members couldn't explain how to redeem without help.</div>
+          <div class="pain-severity">SEVERITY · HIGH · Loyalty value perception gap</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Mobile app checkout flow requires 7 taps vs Starbucks' 4; cart abandonment 2.3× higher than benchmark.</div>
+          <div class="pain-severity">SEVERITY · HIGH · Revenue impact</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">Limited social/sharing features disconnects brand's strong community identity from its digital presence.</div>
+          <div class="pain-severity">SEVERITY · LOW · Brand coherence issue</div>
+        </div>
+      </div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-brand-header">
+        <span class="brand-dot" style="background:var(--cbtl)"></span>
+        <span class="pain-brand-name">Coffee Bean & Tea Leaf</span>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔴</div>
+        <div>
+          <div class="pain-text">App crashes reported by 38% of users during checkout. 19% abandoned permanently after crash loss of order data.</div>
+          <div class="pain-severity">SEVERITY · CRITICAL · Direct revenue loss</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔴</div>
+        <div>
+          <div class="pain-text">Store hours on app inaccurate for 31% of tested locations; users arrived at closed stores during listed open hours.</div>
+          <div class="pain-severity">SEVERITY · CRITICAL · Trust-breaking experience</div>
+        </div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">⚠</div>
+        <div>
+          <div class="pain-text">No order history means repeat customers must rebuild orders manually each visit; no personalization engine.</div>
+          <div class="pain-severity">SEVERITY · HIGH · Loyalty & retention risk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:8px;"></div>
+
+  <!-- SECTION 7: NPS & SENTIMENT -->
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div>
+      <div class="section-title">NPS & Sentiment Scores</div>
+      <div class="section-desc">Net Promoter Scores and sentiment breakdown from participant surveys (n=148)</div>
+    </div>
+  </div>
+
+  <div class="heuristics-grid">
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">Starbucks · NPS</div>
+      <div class="heuristic-score" style="color:var(--starbucks)">+62</div>
+      <div class="heuristic-sub">Promoters 78% · Detractors 16%</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">Dutch Bros · NPS</div>
+      <div class="heuristic-score" style="color:var(--dutch)">+71</div>
+      <div class="heuristic-sub">Promoters 82% · Detractors 11%</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">Peet's Coffee · NPS</div>
+      <div class="heuristic-score" style="color:var(--peets)">+44</div>
+      <div class="heuristic-sub">Promoters 68% · Detractors 24%</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">Coffee Bean · NPS</div>
+      <div class="heuristic-score" style="color:var(--cbtl)">+18</div>
+      <div class="heuristic-sub">Promoters 52% · Detractors 34%</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">App Store Rating (avg)</div>
+      <div class="heuristic-score" style="color:var(--gold)">4.6</div>
+      <div class="heuristic-sub">Starbucks leads · CBTL lowest at 2.8</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">Task Completion Rate</div>
+      <div class="heuristic-score" style="color:var(--ink)">74%</div>
+      <div class="heuristic-sub">Avg across all 4 brands, all tasks</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">SUS Score (avg)</div>
+      <div class="heuristic-score" style="color:var(--ink)">71.4</div>
+      <div class="heuristic-sub">System Usability Scale (0–100)</div>
+    </div>
+    <div class="heuristic-cell">
+      <div class="heuristic-metric">Loyalty App Usage</div>
+      <div class="heuristic-score" style="color:var(--ink)">58%</div>
+      <div class="heuristic-sub">Weekly active among enrolled users</div>
+    </div>
+  </div>
+
+  <!-- SECTION 8: RECOMMENDATIONS -->
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div>
+      <div class="section-title">Strategic Recommendations</div>
+      <div class="section-desc">Prioritized UX improvements derived from research findings</div>
+    </div>
+  </div>
+
+  <div class="reco-grid">
+    <div class="reco-cell">
+      <div class="reco-priority priority-high">↑ High Priority</div>
+      <div class="reco-title">Rebuild CBTL App from Ground Up</div>
+      <div class="reco-text">The Coffee Bean app requires a full architectural overhaul. Critical bugs, missing features (order history, real-time info), and accessibility failures make incremental fixes insufficient. Recommend a phased rebuild with clear feature parity goals.</div>
+      <div class="reco-brands"><span class="pill pill-cbtl" style="font-size:8px; padding:2px 8px;">Coffee Bean</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-high">↑ High Priority</div>
+      <div class="reco-title">Add Drive-Thru Queue Transparency</div>
+      <div class="reco-text">Dutch Bros' biggest experience gap is wait time uncertainty. Implementing real-time queue position or estimated wait times — visible before joining the queue — would directly reduce abandonment and drive loyalty among time-sensitive users.</div>
+      <div class="reco-brands"><span class="pill pill-dutch" style="font-size:8px; padding:2px 8px;">Dutch Bros</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-high">↑ High Priority</div>
+      <div class="reco-title">Simplify Peet's Rewards Redemption</div>
+      <div class="reco-text">Surface reward availability and one-tap redemption at checkout. Eliminate the requirement to navigate to a separate loyalty screen. Consider a persistent balance indicator on the home screen and push notifications as rewards become redeemable.</div>
+      <div class="reco-brands"><span class="pill pill-peets" style="font-size:8px; padding:2px 8px;">Peet's Coffee</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-med">→ Medium Priority</div>
+      <div class="reco-title">Starbucks Menu Curation & Guided Discovery</div>
+      <div class="reco-text">Introduce a "Quick Pick" or AI-guided recommendation layer for new and infrequent users. Behavioral filtering ("I like sweet and creamy") reduces cognitive load without removing customization depth for power users.</div>
+      <div class="reco-brands"><span class="pill pill-starbucks" style="font-size:8px; padding:2px 8px;">Starbucks</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-med">→ Medium Priority</div>
+      <div class="reco-title">Dutch Bros: Publish the Secret Menu</div>
+      <div class="reco-text">The barrier of not knowing "secret" drinks actively deters new customers. Officially publishing popular off-menu items in-app with community context (who invented it, when) transforms anxiety into delight and strengthens brand story.</div>
+      <div class="reco-brands"><span class="pill pill-dutch" style="font-size:8px; padding:2px 8px;">Dutch Bros</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-med">→ Medium Priority</div>
+      <div class="reco-title">Cross-Brand: Accessibility Audit & Remediation</div>
+      <div class="reco-text">Only Starbucks achieves WCAG AA compliance. Dutch Bros, Peet's, and Coffee Bean should conduct accessibility audits and prioritize screen reader support, contrast ratios, and tap target sizes. Compliance also reduces legal risk exposure significantly.</div>
+      <div class="reco-brands"><span class="pill pill-dutch" style="font-size:8px; padding:2px 8px;">Dutch Bros</span><span class="pill pill-peets" style="font-size:8px; padding:2px 8px;">Peet's</span><span class="pill pill-cbtl" style="font-size:8px; padding:2px 8px;">Coffee Bean</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-low">↓ Longer Term</div>
+      <div class="reco-title">Peet's: Invest in Digital Brand Voice</div>
+      <div class="reco-text">Peet's best-in-class in-store experience and product quality doesn't translate digitally. Developing a content strategy — origin stories, brewing education, seasonal narratives — would close the gap between physical warmth and app coldness.</div>
+      <div class="reco-brands"><span class="pill pill-peets" style="font-size:8px; padding:2px 8px;">Peet's Coffee</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-low">↓ Longer Term</div>
+      <div class="reco-title">Dutch Bros: Expand Ordering Channels</div>
+      <div class="reco-text">As Dutch Bros expands into urban markets with walk-in formats, the absence of mobile-ahead ordering becomes a competitive liability. A phased rollout of mobile ordering for non-drive-thru locations should be scoped for 2025–2026 expansion markets.</div>
+      <div class="reco-brands"><span class="pill pill-dutch" style="font-size:8px; padding:2px 8px;">Dutch Bros</span></div>
+    </div>
+    <div class="reco-cell">
+      <div class="reco-priority priority-low">↓ Longer Term</div>
+      <div class="reco-title">Industry: Order Modification UX Standards</div>
+      <div class="reco-text">The entire category lacks consistent patterns for complex beverage customization. A shared UX pattern library (similar to Material Design but for F&B ordering) would benefit consumers across all apps by reducing re-learning costs when switching between chains.</div>
+      <div class="reco-brands"><span class="pill pill-starbucks" style="font-size:8px; padding:2px 8px;">All Brands</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-text">UX Research Report No. UX-2025-04 · Coffee Chain Comparative Study · n=148 participants · Data collected January–February 2025</div>
+  <div class="footer-text">Methods: Usability Testing · Contextual Inquiry · Heuristic Evaluation · NPS Survey · In-depth Interviews</div>
+</footer>
+
+<script>
+  // Animate rating bars on scroll
+  const ratingsSection = document.getElementById('ratings');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-bars');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  if (ratingsSection) observer.observe(ratingsSection);
+
+  // Stagger section fade-ins
+  const sections = document.querySelectorAll('.section-header, .brand-grid, .method-bar, .rating-section, .comparison-table, .journey-map, .pain-grid, .heuristics-grid, .reco-grid');
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }, 60);
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  sections.forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    fadeObserver.observe(el);
+  });
+</script>
+</body>
+</html>

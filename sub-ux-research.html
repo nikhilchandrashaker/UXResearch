@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sub Chain UX Research 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --muted: #888680;
+    --dim: #555350;
+
+    --subway: #00a651;
+    --subway-bg: rgba(0,166,81,0.1);
+    --jj: #e8b84b;
+    --jj-bg: rgba(232,184,75,0.1);
+    --fire: #e04c2d;
+    --fire-bg: rgba(224,76,45,0.1);
+    --quiz: #5a5a5a;
+    --quiz-bg: rgba(90,90,90,0.12);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 80px 60px 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,166,81,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--muted);
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  h1 em {
+    font-style: normal;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+    color: transparent;
+  }
+  .header-sub {
+    max-width: 560px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 1100px; margin: 0 auto; }
+  .section { padding: 60px; border-bottom: 1px solid var(--border); }
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  /* ── STAT STRIP ── */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 60px;
+  }
+  .stat-cell {
+    background: var(--surface);
+    padding: 24px 28px;
+    transition: background 0.2s;
+  }
+  .stat-cell:hover { background: var(--surface2); }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+  .stat-lbl { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+
+  /* ── BRAND CARDS GRID ── */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .brand-card {
+    background: var(--surface);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s;
+  }
+  .brand-card:hover { background: var(--surface2); }
+  .brand-card.dimmed { opacity: 0.65; }
+  .brand-accent {
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+  }
+  .brand-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .brand-tagline { font-size: 11px; color: var(--muted); }
+  .brand-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  /* ── SCORE BARS ── */
+  .score-list { display: flex; flex-direction: column; gap: 12px; }
+  .score-row { display: flex; align-items: center; gap: 12px; }
+  .score-label { font-size: 11px; color: var(--muted); min-width: 108px; letter-spacing: 0.02em; }
+  .score-track {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .score-fill {
+    height: 3px;
+    border-radius: 2px;
+    animation: fillIn 1s ease forwards;
+    transform-origin: left;
+  }
+  @keyframes fillIn { from { width: 0 !important; } }
+  .score-val { font-size: 11px; color: var(--muted); min-width: 28px; text-align: right; font-family: 'DM Mono', monospace; }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--border2);
+  }
+  .compare-table th:first-child { text-align: left; color: var(--dim); }
+  .compare-table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--muted);
+    vertical-align: middle;
+  }
+  .compare-table td:first-child {
+    text-align: left;
+    color: var(--text);
+    font-size: 12px;
+    letter-spacing: 0.01em;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .stars { letter-spacing: -2px; font-size: 14px; }
+  .best { color: #f0ede8; }
+
+  /* ── FINDINGS ── */
+  .findings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .finding-card {
+    background: var(--surface);
+    padding: 28px 32px;
+    transition: background 0.2s;
+  }
+  .finding-card:hover { background: var(--surface2); }
+  .finding-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  .finding-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .finding-body { font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+  /* ── UX VERDICT ── */
+  .verdict-list { display: flex; flex-direction: column; gap: 1px; }
+  .verdict-row {
+    display: grid;
+    grid-template-columns: 24px 180px 1fr 100px;
+    align-items: start;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.5s ease forwards;
+    opacity: 0;
+  }
+  .verdict-row:last-child { border-bottom: none; }
+  @keyframes fadeUp { to { opacity: 1; } }
+  .verdict-num { font-size: 11px; color: var(--dim); font-family: 'DM Mono', monospace; padding-top: 2px; }
+  .verdict-brand { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+  .verdict-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .verdict-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .verdict-score-big {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    text-align: right;
+    line-height: 1;
+  }
+  .verdict-score-lbl { font-size: 10px; color: var(--dim); text-align: right; margin-top: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+  .footer p { font-size: 11px; color: var(--dim); letter-spacing: 0.04em; }
+
+  @media (max-width: 700px) {
+    .header, .section { padding: 40px 24px; }
+    .stat-strip { grid-template-columns: 1fr 1fr; }
+    .brand-grid, .findings-grid { grid-template-columns: 1fr; }
+    .verdict-row { grid-template-columns: 24px 1fr; }
+    .verdict-score-big { display: none; }
+    .footer { flex-direction: column; align-items: flex-start; padding: 30px 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <p class="eyebrow">UX Research Report · Sandwich Chains · 2025</p>
+    <h1>The Sub Shop<br><em>Experience</em> Wars</h1>
+    <p class="header-sub">A competitive UX breakdown of four major sandwich chains — from in-store ordering flow to digital experience, brand perception, and market trajectory.</p>
+  </header>
+
+  <!-- SCALE -->
+  <section class="section">
+    <p class="section-title">Market footprint</p>
+    <div class="stat-strip">
+      <div class="stat-cell">
+        <div class="stat-num" style="color: var(--subway);">~19,500</div>
+        <div class="stat-lbl">Subway US locations</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" style="color: var(--jj);">2,644</div>
+        <div class="stat-lbl">Jimmy John's locations</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" style="color: var(--fire);">1,209</div>
+        <div class="stat-lbl">Firehouse Subs locations</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num" style="color: var(--quiz);">131</div>
+        <div class="stat-lbl">Quiznos remaining (US)</div>
+      </div>
+    </div>
+
+    <!-- BRAND CARDS -->
+    <div class="brand-grid">
+
+      <!-- Subway -->
+      <div class="brand-card">
+        <div class="brand-accent" style="background: var(--subway);"></div>
+        <div class="brand-header">
+          <div>
+            <div class="brand-name" style="color: var(--subway);">Subway</div>
+            <div class="brand-tagline">"Eat Fresh" · Est. 1965</div>
+          </div>
+          <div class="brand-badge" style="background: var(--subway-bg); color: var(--subway);">Market leader</div>
+        </div>
+        <div class="score-list">
+          <div class="score-row">
+            <span class="score-label">Best tasting %</span>
+            <div class="score-track"><div class="score-fill" style="width: 72%; background: var(--subway);"></div></div>
+            <span class="score-val">24%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Quality score</span>
+            <div class="score-track"><div class="score-fill" style="width: 60%; background: var(--subway);"></div></div>
+            <span class="score-val">18</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Value score</span>
+            <div class="score-track"><div class="score-fill" style="width: 43%; background: var(--subway);"></div></div>
+            <span class="score-val">13</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Speed assoc.</span>
+            <div class="score-track"><div class="score-fill" style="width: 93%; background: var(--subway);"></div></div>
+            <span class="score-val">28%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jimmy John's -->
+      <div class="brand-card">
+        <div class="brand-accent" style="background: var(--jj);"></div>
+        <div class="brand-header">
+          <div>
+            <div class="brand-name" style="color: var(--jj);">Jimmy John's</div>
+            <div class="brand-tagline">"Freaky Fast" · Est. 1983</div>
+          </div>
+          <div class="brand-badge" style="background: var(--jj-bg); color: var(--jj);">Speed brand</div>
+        </div>
+        <div class="score-list">
+          <div class="score-row">
+            <span class="score-label">Best tasting %</span>
+            <div class="score-track"><div class="score-fill" style="width: 27%; background: var(--jj);"></div></div>
+            <span class="score-val">9%</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Quality score</span>
+            <div class="score-track"><div class="score-fill" style="width: 40%; background: var(--jj);"></div></div>
+            <span class="score-val">12</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Value score</span>
+            <div class="score-track"><div class="score-fill" style="width: 13%; background: var(--jj);"></div></div>
+            <span class="score-val">4</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Delivery loyalty</span>
+            <div class="score-track"><div class="score-fill" style="width: 80%; background: var(--jj);"></div></div>
+            <span class="score-val">High</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Firehouse -->
+      <div class="brand-card">
+        <div class="brand-accent" style="background: var(--fire);"></div>
+        <div class="brand-header">
+          <div>
+            <div class="brand-name" style="color: var(--fire);">Firehouse Subs</div>
+            <div class="brand-tagline">Premium steamed subs · Est. 1994</div>
+          </div>
+          <div class="brand-badge" style="background: var(--fire-bg); color: var(--fire);">Quality play</div>
+        </div>
+        <div class="score-list">
+          <div class="score-row">
+            <span class="score-label">Food quality</span>
+            <div class="score-track"><div class="score-fill" style="width: 82%; background: var(--fire);"></div></div>
+            <span class="score-val">High</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">App UX rating</span>
+            <div class="score-track"><div class="score-fill" style="width: 28%; background: var(--fire);"></div></div>
+            <span class="score-val">★★</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Online customiz.</span>
+            <div class="score-track"><div class="score-fill" style="width: 20%; background: var(--fire);"></div></div>
+            <span class="score-val">Poor</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Loyalty rewards</span>
+            <div class="score-track"><div class="score-fill" style="width: 15%; background: rgba(224,76,45,0.4);"></div></div>
+            <span class="score-val" style="color: var(--fire);">Broken</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiznos -->
+      <div class="brand-card dimmed">
+        <div class="brand-accent" style="background: var(--quiz);"></div>
+        <div class="brand-header">
+          <div>
+            <div class="brand-name" style="color: var(--muted);">Quiznos</div>
+            <div class="brand-tagline">Toasted subs · Est. 1981 · Declining</div>
+          </div>
+          <div class="brand-badge" style="background: rgba(90,90,90,0.15); color: var(--quiz);">Ghost brand</div>
+        </div>
+        <div class="score-list">
+          <div class="score-row">
+            <span class="score-label">Quality score</span>
+            <div class="score-track"><div class="score-fill" style="width: 23%; background: var(--quiz);"></div></div>
+            <span class="score-val">7</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Value score</span>
+            <div class="score-track"><div class="score-fill" style="width: 1%; background: var(--quiz);"></div></div>
+            <span class="score-val">0</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Peak locations</span>
+            <div class="score-track"><div class="score-fill" style="width: 100%; background: rgba(90,90,90,0.4);"></div></div>
+            <span class="score-val">4,700</span>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Locations now</span>
+            <div class="score-track"><div class="score-fill" style="width: 3%; background: var(--quiz);"></div></div>
+            <span class="score-val">131</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="section">
+    <p class="section-title">UX dimension scorecard</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th style="color: var(--subway);">Subway</th>
+          <th style="color: var(--jj);">Jimmy John's</th>
+          <th style="color: var(--fire);">Firehouse</th>
+          <th style="color: var(--muted);">Quiznos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ordering speed</td>
+          <td class="best"><span class="stars">★★★★★</span></td>
+          <td class="best"><span class="stars">★★★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars" style="color:#333;">★★</span></td>
+        </tr>
+        <tr>
+          <td>Customization depth</td>
+          <td class="best"><span class="stars">★★★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars">★★</span></td>
+          <td><span class="stars">★★★</span></td>
+        </tr>
+        <tr>
+          <td>Digital app quality</td>
+          <td class="best"><span class="stars">★★★★</span></td>
+          <td class="best"><span class="stars">★★★★</span></td>
+          <td><span class="stars">★★</span></td>
+          <td><span class="stars" style="color:#333;">★</span></td>
+        </tr>
+        <tr>
+          <td>Food quality (UX impact)</td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td class="best"><span class="stars">★★★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+        </tr>
+        <tr>
+          <td>Value perception</td>
+          <td class="best"><span class="stars">★★★★</span></td>
+          <td><span class="stars">★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars" style="color:#333;">★</span></td>
+        </tr>
+        <tr>
+          <td>Loyalty / rewards UX</td>
+          <td class="best"><span class="stars">★★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars" style="color: var(--fire);">★</span></td>
+          <td><span class="stars" style="color:#333;">★</span></td>
+        </tr>
+        <tr>
+          <td>Availability / reach</td>
+          <td class="best"><span class="stars">★★★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars">★★★</span></td>
+          <td><span class="stars" style="color:#333;">★</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FINDINGS -->
+  <section class="section">
+    <p class="section-title">Key UX research findings</p>
+    <div class="findings-grid">
+      <div class="finding-card">
+        <span class="finding-tag" style="background: var(--subway-bg); color: var(--subway);">Subway</span>
+        <div class="finding-title">The $5 footlong ghost</div>
+        <div class="finding-body">The 2008–2012 promo permanently anchored user price expectations so low that current market-rate pricing feels like a trust violation — even when competitors charge the same. This is a durable user expectation problem no design sprint can fix. Subway launched its first-ever value menu in April 2026 ($3.99 Deli Faves) as an attempt to close this gap.</div>
+      </div>
+      <div class="finding-card">
+        <span class="finding-tag" style="background: var(--jj-bg); color: var(--jj);">Jimmy John's</span>
+        <div class="finding-title">Speed as a design system</div>
+        <div class="finding-body">"Freaky Fast" isn't just a tagline — it's an operational architecture. A deliberately simple menu reduces cognitive load during ordering, shortens prep time, and makes delivery promises reliable. Speed is baked into the product as a UX feature, not bolted on via marketing. No chicken options remains a notable menu gap that limits audience breadth.</div>
+      </div>
+      <div class="finding-card">
+        <span class="finding-tag" style="background: var(--fire-bg); color: var(--fire);">Firehouse</span>
+        <div class="finding-title">Loyalty UX debt</div>
+        <div class="finding-body">Firehouse's broken rewards redemption is a trust-erosion antipattern at scale: users who earn points but can't spend them experience frustration more acute than if no program existed. Reports show loyalty points can't be redeemed in-app or in-store consistently. A premium product undermined by a brittle digital layer is a classic mismatch between brand promise and user reality.</div>
+      </div>
+      <div class="finding-card">
+        <span class="finding-tag" style="background: rgba(90,90,90,0.15); color: var(--muted);">Quiznos</span>
+        <div class="finding-title">Effectively a brand memory</div>
+        <div class="finding-body">Most users remember Quiznos more than they experience it. Down from 4,700 to 131 US locations, its survival strategy has pivoted to convenience-store kiosks in Nebraska gas stations. Value score of 0 in consumer surveys. Not a meaningful digital or in-store UX to study in 2025 — inclusion here is largely for historical contrast and cautionary tale framing.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VERDICT -->
+  <section class="section">
+    <p class="section-title">Overall UX verdict</p>
+    <div class="verdict-list">
+
+      <div class="verdict-row" style="animation-delay: 0.05s;">
+        <div class="verdict-num">01</div>
+        <div>
+          <div class="verdict-brand" style="color: var(--subway);">Subway</div>
+          <div class="verdict-sub">Accessibility + Customization winner</div>
+        </div>
+        <div class="verdict-text">Dominates on reach, ordering flexibility, and digital investment. The best overall UX architecture for the most users — even if the brand is managing perception debt from its own past promotions. The 2025 value menu signals they understand the problem.</div>
+        <div>
+          <div class="verdict-score-big" style="color: var(--subway);">A−</div>
+          <div class="verdict-score-lbl">overall UX</div>
+        </div>
+      </div>
+
+      <div class="verdict-row" style="animation-delay: 0.15s;">
+        <div class="verdict-num">02</div>
+        <div>
+          <div class="verdict-brand" style="color: var(--jj);">Jimmy John's</div>
+          <div class="verdict-sub">Speed + Consistency winner</div>
+        </div>
+        <div class="verdict-text">Operationally the tightest UX of the four. The simple menu is a feature, not a limitation. Delivery speed is verifiable and consistent. Scores lower on taste and value but its core promise — fast, fresh, reliable — is well-executed end-to-end. Growing internationally.</div>
+        <div>
+          <div class="verdict-score-big" style="color: var(--jj);">B+</div>
+          <div class="verdict-score-lbl">overall UX</div>
+        </div>
+      </div>
+
+      <div class="verdict-row" style="animation-delay: 0.25s;">
+        <div class="verdict-num">03</div>
+        <div>
+          <div class="verdict-brand" style="color: var(--fire);">Firehouse Subs</div>
+          <div class="verdict-sub">Product quality winner, digital laggard</div>
+        </div>
+        <div class="verdict-text">The best-tasting product in the set — steamed meats and proprietary bread are genuine differentiators. But the app is broken, online customization is limited, and loyalty redemption doesn't work. Premium product, bargain-tier digital experience. Huge opportunity gap.</div>
+        <div>
+          <div class="verdict-score-big" style="color: var(--fire);">C+</div>
+          <div class="verdict-score-lbl">overall UX</div>
+        </div>
+      </div>
+
+      <div class="verdict-row" style="animation-delay: 0.35s; opacity: 0.5;">
+        <div class="verdict-num">04</div>
+        <div>
+          <div class="verdict-brand" style="color: var(--muted);">Quiznos</div>
+          <div class="verdict-sub">In managed decline</div>
+        </div>
+        <div class="verdict-text">131 locations, no meaningful digital presence, value score of 0. The primary UX lesson Quiznos offers is how franchisee-hostile sourcing fees and two bankruptcies can collapse a 4,700-unit chain to near-extinction. A cautionary brand, not a competitive one.</div>
+        <div>
+          <div class="verdict-score-big" style="color: var(--dim);">D</div>
+          <div class="verdict-score-lbl">overall UX</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>Sources: YouGov (Feb 2025) · QSR Magazine 2024 · TheStreet · Food Republic · RetailWire</p>
+    <p style="text-align: right;">Compiled June 2025</p>
+  </footer>
+
+</div>
+
+<script>
+  const rows = document.querySelectorAll('.verdict-row');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.style.opacity = '1';
+    });
+  }, { threshold: 0.1 });
+  rows.forEach(r => obs.observe(r));
+</script>
+</body>
+</html>
